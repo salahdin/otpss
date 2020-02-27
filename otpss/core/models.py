@@ -29,12 +29,42 @@ class Assessment(models.Model):
 
 
 class Question(models.Model):
-    pass
+    assessment = models.ForeignKey(
+        Assessment,
+        default=None,
+        related_name="assessment",
+        on_delete=models.CASCADE
+    )
+    content = models.CharField(
+        max_length=500,
+        null=True,
+        blank=True,
+        verbose_name="content of the question"
+    )
+    date = models.DateTimeField(
+        null=False,
+        blank=False
+    )
 
 
 class Answer(models.Model):
-    pass
+    question = models.ManyToManyField(
+        Question,
+        related_name="question",
+    )
+    Answercontent = models.CharField(
+        max_length=500,
+        verbose_name="content of question"
+
+    )
 
 
-class Image(models.Model):
+class AssessmentImage(models.Model):
+    assessment = models.ForeignKey(Assessment,
+                                   default=None,
+                                   on_delete=models.CASCADE)
+    image = models.ImageField(verbose_name='Image')
+
+
+class Vote(models.Model):
     pass
