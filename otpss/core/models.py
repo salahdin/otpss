@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 
 class Assessment(models.Model):
@@ -27,6 +28,12 @@ class Assessment(models.Model):
         null=False,
     )
 
+    user = models.ForeignKey(
+        User,
+        related_name='assessmentpost',
+        on_delete=models.DO_NOTHING
+    )
+
 
 class Question(models.Model):
     assessment = models.ForeignKey(
@@ -52,11 +59,14 @@ class Answer(models.Model):
         Question,
         related_name="question",
     )
+
     Answercontent = models.CharField(
         max_length=500,
         verbose_name="content of question"
-
     )
+
+    user = models.CharField(max_length=250)
+    created = models.DateTimeField(auto_now_add=True, verbose_name="date created")
 
 
 class AssessmentImage(models.Model):
@@ -67,4 +77,5 @@ class AssessmentImage(models.Model):
 
 
 class Vote(models.Model):
-    pass
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    assessmentVote = models.ForeignKey(Assessment, on_delete=models.CASCADE)

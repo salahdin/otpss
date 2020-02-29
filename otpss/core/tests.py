@@ -1,3 +1,6 @@
 from django.test import TestCase
+from .models import *
+from faker import Faker
 
-# Create your tests here.
+fake = Faker()
+
