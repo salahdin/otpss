@@ -31,7 +31,8 @@ class Assessment(models.Model):
     user = models.ForeignKey(
         User,
         related_name='assessmentpost',
-        on_delete=models.DO_NOTHING
+        on_delete=models.DO_NOTHING,
+        null=True,
     )
 
 
@@ -75,7 +76,3 @@ class AssessmentImage(models.Model):
                                    on_delete=models.CASCADE)
     image = models.ImageField(verbose_name='Image')
 
-
-class Vote(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    assessmentVote = models.ForeignKey(Assessment, on_delete=models.CASCADE)
