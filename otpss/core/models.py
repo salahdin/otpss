@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
 
 
 class Assessment(models.Model):
@@ -26,7 +27,8 @@ class Assessment(models.Model):
     uploadDate = models.DateTimeField(
         verbose_name="date and time of upload",
         null=False,
-        auto_created=True
+        auto_created=True,
+        default=timezone.now
     )
 
     user = models.ForeignKey(
@@ -75,5 +77,5 @@ class AssessmentImage(models.Model):
     assessment = models.ForeignKey(Assessment,
                                    default=None,
                                    on_delete=models.CASCADE)
-    image = models.ImageField(verbose_name='Image')
+    image = models.ImageField(verbose_name='Image', upload_to='elements/')
 

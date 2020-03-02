@@ -1,4 +1,4 @@
-from django.shortcuts import render,get_object_or_404
+from django.shortcuts import render, get_object_or_404, HttpResponseRedirect
 from django.forms import modelformset_factory
 from django.contrib.auth.decorators import login_required
 from .forms import *
@@ -38,7 +38,6 @@ from django.core.files.storage import FileSystemStorage
     return render(request, 'index.html',
                   {'assessmentForm': assessmentForm, 'formset': formset})"""
 
-
 """class VehicleDetailView(DetailView):
     template_name = 'detail_view.html'
     queryset = Assessment.objects.all()
@@ -53,11 +52,13 @@ def list_vehicles(request):
     context ={"assessment": listx}
     return render(request, "index.html", context)"""
 
+
 def search(request):
-    return render(request,"index.html")
+    return render(request, "index.html")
+
 
 def upload_paper(request):
-    if request.method == 'POST' and request.FILES['myfile']:
+    """if request.method == 'POST' and request.FILES['myfile']:
         myfile = request.FILES['myfile']
         fs = FileSystemStorage()
         filename = fs.save(myfile.name, myfile)
@@ -65,4 +66,26 @@ def upload_paper(request):
         return render(request, 'core/simple_upload.html', {
             'uploaded_file_url': uploaded_file_url
         })
-    return render(request, 'core/simple_upload.html')
+    return render(request, 'core/simple_upload.html')"""
+    ImageFormSet = modelformset_factory(AssessmentImage,
+                                        form=ImageForm, extra=3)
+    if request.method == 'POST':
+        assessmentForm = AssessmentForm(request.POST)
+        imageformset = ImageFormSet(request.POST, request.FILES,
+                                    queryset=AssessmentImage.objects.none())
+
+        if assessmentForm.is_valid() and imageformset.is_valid():
+            assessment_form = assessmentForm.save(commit=False)
+            assessment_form.user = request.user
+            assessment_form.save()
+
+            for form in imageformset.cleaned_data:
+                if form:
+                    image = form['image']
+                    photo = AssessmentImage(assessment=assessment_form, image=image)
+                    photo.save()
+            return HttpResponseRedirect("/")
+    else:
+        assessmentForm = AssessmentForm()
+        imageformset = ImageFormSet(queryset=AssessmentImage.objects.none())
+    return render(request, 'upload.html', {'form': assessmentForm, 'ImageForm': imageformset})

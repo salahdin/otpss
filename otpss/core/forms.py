@@ -8,7 +8,7 @@ class AssessmentForm(forms.ModelForm):
     class Meta:
         model = Assessment
         fields = "__all__"
-        exclude = ('user',)
+        exclude = ('user','uploadDate',)
         widgets = {
             'assessmentDate': DateInput(),
         }
