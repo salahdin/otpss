@@ -26,6 +26,7 @@ class Assessment(models.Model):
     uploadDate = models.DateTimeField(
         verbose_name="date and time of upload",
         null=False,
+        auto_created=True
     )
 
     user = models.ForeignKey(

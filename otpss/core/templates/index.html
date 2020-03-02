@@ -1,23 +1,10 @@
 {% extends 'templates/base.html' %}
 
-{% block main %}
-<form id="post_form" method="post" action="" enctype="multipart/form-data">
-
-    {% csrf_token %}
-    {% for hidden in postForm.hidden_fields %}
-        {{ hidden }}
-    {% endfor %}
-
-    {% for field in assessmentForm %}
-        {{ field }} <br />
-    {% endfor %}
-
-    {{ formset.management_form }}
-    {% for form in formset %}
-        {{ form }}
-    {% endfor %}
-
-
-    <input type="submit" name="submit" value="Submit" />
-</form>
+{% block content %}
+    <div class="main" id="search">
+    <form>
+        <input type="text" />
+        <input type="submit" value="Go">
+    </div>
+    </form>
 {% endblock %}

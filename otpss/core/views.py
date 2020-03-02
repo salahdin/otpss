@@ -1,9 +1,10 @@
 from django.shortcuts import render,get_object_or_404
 from django.forms import modelformset_factory
 from django.contrib.auth.decorators import login_required
-from .forms import ImageForm, AssessmentForm
+from .forms import *
 from .models import *
 from django.views.generic.detail import DetailView
+from django.core.files.storage import FileSystemStorage
 
 """def upload(request):
 
@@ -38,7 +39,7 @@ from django.views.generic.detail import DetailView
                   {'assessmentForm': assessmentForm, 'formset': formset})"""
 
 
-class VehicleDetailView(DetailView):
+"""class VehicleDetailView(DetailView):
     template_name = 'detail_view.html'
     queryset = Assessment.objects.all()
 
@@ -50,4 +51,18 @@ class VehicleDetailView(DetailView):
 def list_vehicles(request):
     listx = Assessment.objects.all()
     context ={"assessment": listx}
-    return render(request, "index.html", context)
+    return render(request, "index.html", context)"""
+
+def search(request):
+    return render(request,"index.html")
+
+def upload_paper(request):
+    if request.method == 'POST' and request.FILES['myfile']:
+        myfile = request.FILES['myfile']
+        fs = FileSystemStorage()
+        filename = fs.save(myfile.name, myfile)
+        uploaded_file_url = fs.url(filename)
+        return render(request, 'core/simple_upload.html', {
+            'uploaded_file_url': uploaded_file_url
+        })
+    return render(request, 'core/simple_upload.html')
