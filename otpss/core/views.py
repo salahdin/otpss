@@ -3,8 +3,7 @@ from django.forms import modelformset_factory
 from django.contrib.auth.decorators import login_required
 from .forms import *
 from .models import *
-from django.views.generic.detail import DetailView
-from django.core.files.storage import FileSystemStorage
+from django.views import generic
 
 """def upload(request):
 
@@ -89,3 +88,11 @@ def upload_paper(request):
         assessmentForm = AssessmentForm()
         imageformset = ImageFormSet(queryset=AssessmentImage.objects.none())
     return render(request, 'upload.html', {'form': assessmentForm, 'ImageForm': imageformset})
+
+
+class AssessmentListView(generic.ListView):
+    model = Assessment
+    context_object_name = 'assessments'  # your own name for the list as a template variable
+    paginate_by = 5
+    template_name = 'list_view.html'
+

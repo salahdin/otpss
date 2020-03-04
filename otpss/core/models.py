@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
+from django.db.models.signals import post_save
+from .convert import convert_img_to_txt
 
 
 class Assessment(models.Model):
@@ -46,8 +48,7 @@ class Question(models.Model):
         related_name="assessment",
         on_delete=models.CASCADE
     )
-    content = models.CharField(
-        max_length=500,
+    content = models.TextField(
         null=True,
         blank=True,
         verbose_name="content of the question"
@@ -56,6 +57,9 @@ class Question(models.Model):
         null=False,
         blank=False
     )
+
+
+
 
 
 class Answer(models.Model):
@@ -76,6 +80,20 @@ class Answer(models.Model):
 class AssessmentImage(models.Model):
     assessment = models.ForeignKey(Assessment,
                                    default=None,
-                                   on_delete=models.CASCADE)
+                                   on_delete=models.CASCADE,
+                                   related_name="assessmentPic"
+                                   )
     image = models.ImageField(verbose_name='Image', upload_to='elements/')
 
+def convert_to_text(sender, **kwargs):
+    if kwargs['created']:
+
+        # Assessment.objects.create(protocolrequest=kwargs['instance'], response_date=timezone.now())
+        imglist = kwargs.get('instance')
+        text = ""
+
+        text += convert_img_to_txt(r'C:\Users\salahdin\Desktop\result3.JPG')
+        Question.objects.create(assessment=kwargs.get('instance').assessment, content=text, date=timezone.now())
+
+
+post_save.connect(convert_to_text, sender=AssessmentImage)

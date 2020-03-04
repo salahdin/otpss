@@ -1,10 +1,18 @@
 {% extends 'templates/base.html' %}
 {% load crispy_forms_tags %}
 {% block content %}
+<div class="container login-container">
+<div class="row">
+<div class="col-md-6 login-form-1">
     <h1>Login</h1>
     <form class="site-form" action="{%url 'accounts:login' %}" method="post">
         {% csrf_token %}
+        <div class="form-group">
         {{ form|crispy }}
-        <input type="submit" value="Login">
+        </div>
+        <input type="submit" value="Login" class="btn btn-success" >
     </form>
+    </div>
+    </div>
+   </div>
 {% endblock %}

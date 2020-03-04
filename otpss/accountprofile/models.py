@@ -8,4 +8,4 @@ class UserProfile(models.Model):
     program = models.CharField(max_length=50, verbose_name="program user registered for")
 
     def __str__(self):
-        return self.studentId
+        return str(self.studentId)

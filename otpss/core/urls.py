@@ -5,7 +5,8 @@ from django.conf.urls.static import static
 
 app_name = 'core'
 urlpatterns = [
-    path('',views.search,name = "home page"),
-    path('upload/',views.upload_paper,name="upload"),
+    path('', views.search,name = "home page"),
+    path('list/', views.AssessmentListView.as_view(), name='participant_list'),
+    path('upload/', views.upload_paper,name="upload"),
     ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

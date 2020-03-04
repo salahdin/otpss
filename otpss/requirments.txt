@@ -1,5 +1,7 @@
 asgiref==3.2.3
 Django==2.2.8
+django-bootstrap-base-template==0.0.2
+django-crispy-forms==1.9.0
 Faker==4.0.1
 Pillow==7.0.0
 psycopg2==2.8.4
