@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from django.db.models.signals import post_save
 from .convert import convert_img_to_txt
+from .validators import *
 
 
 class Assessment(models.Model):
@@ -11,6 +12,7 @@ class Assessment(models.Model):
         max_length=10,
         null=False,
         blank=False,
+        validators=[validate_CourseCode],
     )
 
     courseTitle = models.CharField(
@@ -23,7 +25,8 @@ class Assessment(models.Model):
     assessmentDate = models.DateField(
         verbose_name="day of assessment",
         null=True,
-        blank=True
+        blank=True,
+        validators=[validate_AssessmentDate],
     )
 
     uploadDate = models.DateTimeField(
@@ -35,10 +38,21 @@ class Assessment(models.Model):
 
     user = models.ForeignKey(
         User,
-        related_name='assessmentpost',
+        related_name='assessmentPost',
         on_delete=models.DO_NOTHING,
         null=True,
     )
+
+    votes = models.IntegerField(default=0)
+
+
+class UserVotes(models.Model):
+    user = models.ForeignKey(User, related_name="user_votes")
+    assessment = models.ForeignKey(Assessment, related_name="post_votes")
+    vote_type = models.CharField()
+
+    class Meta:
+        unique_together = ('user', 'post', 'vote_type')
 
 
 class Question(models.Model):
@@ -46,7 +60,8 @@ class Question(models.Model):
         Assessment,
         default=None,
         related_name="assessment",
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        unique=False
     )
     content = models.TextField(
         null=True,
@@ -55,11 +70,9 @@ class Question(models.Model):
     )
     date = models.DateTimeField(
         null=False,
-        blank=False
+        blank=False,
+
     )
-
-
-
 
 
 class Answer(models.Model):
@@ -84,16 +97,3 @@ class AssessmentImage(models.Model):
                                    related_name="assessmentPic"
                                    )
     image = models.ImageField(verbose_name='Image', upload_to='elements/')
-
-def convert_to_text(sender, **kwargs):
-    if kwargs['created']:
-
-        # Assessment.objects.create(protocolrequest=kwargs['instance'], response_date=timezone.now())
-        imglist = kwargs.get('instance')
-        text = ""
-
-        text += convert_img_to_txt(r'C:\Users\salahdin\Desktop\result3.JPG')
-        Question.objects.create(assessment=kwargs.get('instance').assessment, content=text, date=timezone.now())
-
-
-post_save.connect(convert_to_text, sender=AssessmentImage)

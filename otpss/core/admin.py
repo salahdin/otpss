@@ -7,7 +7,7 @@ class AssessmenInline(admin.TabularInline):
 
 
 class AssessmentAdmin(admin.ModelAdmin):
-    list_display = ('courseCode', 'courseTitle', 'uploadDate')
+    list_display = ('id','user','courseCode', 'courseTitle', 'uploadDate')
     search_fields = ['courseCode', ]
 
 
