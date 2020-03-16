@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'accountprofile',
     'crispy_forms',
     'django_bootstrap_base_template',
+    'django_extensions',
 ]
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 MIDDLEWARE = [
@@ -52,7 +53,10 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
+GRAPH_MODELS = {
+  'all_applications': True,
+  'group_models': True,
+}
 ROOT_URLCONF = 'otpss.urls'
 
 TEMPLATES = [

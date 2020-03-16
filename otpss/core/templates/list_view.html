@@ -2,16 +2,18 @@
 
 {%block body %}
 <center>
-{%for i in assessments %}
+    {%for i in assessments %}
+</center>
+<div style="text-align: center;">
     <h1>{{i.courseCode}}</h1>
     <h3>{{i.courseTitle}}</h3>
     {% for simage in i.assessmentPic.all %}
-        {% if simage.image%}
-            <a href="#" class="image"><img src="{{ simage.image.url }}"></a>
-        {% endif %}
+    {% if simage.image%}
+    <a href="#" class="image"><img src="{{ simage.image.url }}"></a>
+    {% endif %}
     {%endfor%}
-{%endfor%}
-</center>
+    {%endfor%}
+</div>
 
 
 

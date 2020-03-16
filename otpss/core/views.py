@@ -6,10 +6,26 @@ from .models import *
 from django.views import generic
 from .convert import *
 from django.utils import timezone
+from django.shortcuts import get_object_or_404
 
 
 def search(request):
     return render(request, "index.html")
+
+
+def upvote(request, id_):
+    """
+
+    :type id_: int
+    """
+    answer_ = get_object_or_404(Answer, pk=id_)
+    if request.method == 'POST':
+        try:
+            UserVotes.objects.create(user=request.user, answer=answer_, type='U')
+            answer_.votes = + 1
+            answer_.save()
+        except:
+            pass
 
 
 def upload_paper(request):

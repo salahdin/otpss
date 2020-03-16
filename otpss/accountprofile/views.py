@@ -1,11 +1,11 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login, logout,authenticate
-from . forms import SignUpForm , UserProfileForm
+from . forms import *
 
 
 # Create your views here.
-def signup_view(request):
+"""def signup_view(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
         profileform = UserProfileForm(request.POST)
@@ -24,7 +24,7 @@ def signup_view(request):
         form = SignUpForm()
         profileform = UserProfileForm()
     return render(request, 'accounts/signup.html', {'form': form , 'profile':profileform})
-
+"""
 
 def login_view(request):
     if request.method == 'POST':
@@ -40,6 +40,38 @@ def login_view(request):
 
 
 def logout_view(request):
+    logout(request)
+    return redirect('/')
+
+
+def frontpage(request):
     if request.method == 'POST':
-        logout(request)
-        return redirect('accounts:signup')
+        if 'signupform' in request.POST:
+            signupform = SignUpForm(data=request.POST)
+            profileform = UserProfileForm(data=request.POST)
+            signinform = SignInForm()
+
+            if signupform.is_valid():
+                username = signupform.cleaned_data['username']
+                password = signupform.cleaned_data['password1']
+                signupform.save()
+                user = authenticate(username=username, password=password)
+                profile = profileform.save(commit=False)
+                profile.user = user
+                profile.save()
+                # remember to log the user in
+                login(request, user)
+                return redirect('core:home_page')
+        else:
+            signinform = SignInForm(data=request.POST)
+            signupform = SignUpForm()
+
+            if signinform.is_valid():
+                login(request, signinform.get_user())
+                return redirect('core:home_page')
+    else:
+        signupform = SignUpForm()
+        signinform = SignInForm()
+        profileform = UserProfileForm()
+
+    return render(request, 'frontpage.html', {'signupform': signupform, 'signinform': signinform, 'profileform':profileform })

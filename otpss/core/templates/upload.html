@@ -1,7 +1,7 @@
 {% extends 'templates/base.html' %}
 {% load crispy_forms_tags %}
 
-{% block content %}
+{% block main %}
     <h2>New post</h2>
     <form method="POST" class="post-form" enctype="multipart/form-data">
         {% csrf_token %}
