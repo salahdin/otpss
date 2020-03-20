@@ -10,4 +10,5 @@ urlpatterns = [
                   path('answer/<int:id_>',views.viewAnswers,name = 'view_answers'),
                   path('upload/', views.upload_paper, name="upload"),
                   path('upvote/<int:id_>', views.upvote, name="upvote"),
+                  path('downvote/<int:id_>', views.downvote, name="downvote"),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

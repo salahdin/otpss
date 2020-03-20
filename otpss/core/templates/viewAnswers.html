@@ -9,9 +9,8 @@
     <p>olla</p>
     <p>{{i.Answercontent}}</p>
     <p>{{i.votes}}</p>
-    <form method="POST" class="post-form">
-        <a href="{% url 'core:upvote' i.id%}">upvote</a>
-    </form>
+    <a href="{% url 'core:upvote' i.id%}">upvote</a><br><a href="{% url 'core:downvote' i.id%}">downvote</a>
+
 
 {%endfor%}
 </div>

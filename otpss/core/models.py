@@ -92,7 +92,7 @@ class UserVote(models.Model):
     vote_type = models.CharField(max_length=10,
                                  choices=voteType)
 
-    # so users cant up/down-vote twice
+    # so users can't up/down-vote twice
     class Meta:
         unique_together = ('user', 'answer', 'vote_type')
 

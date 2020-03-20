@@ -21,8 +21,26 @@ def upvote(request, id_):
     answer_ = get_object_or_404(Answer, pk=id_)
     if not request.method == 'POST':
         try:
-            UserVotes.objects.create(user=request.user, answer=answer_, type='U')
-            answer_.votes = + 1
+            UserVote.objects.create(user=request.user, answer=answer_, vote_type='U')
+            answer_.votes += 1
+            answer_.save()
+            print("works")
+        except:
+            print("error ")
+    else:
+        return redirect('core:upload')
+    return redirect('core:list')
+
+def downvote(request, id_):
+    """
+    after clicking the upvote button answer.votes is incremented (will be used for sorting results) and a new vote
+    object is created :type id_: int
+    """
+    answer_ = get_object_or_404(Answer, pk=id_)
+    if not request.method == 'POST':
+        try:
+            UserVote.objects.create(user=request.user, answer=answer_, vote_type='D')
+            answer_.votes = answer_.votes - 1
             answer_.save()
             print("works")
         except:
