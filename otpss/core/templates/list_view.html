@@ -9,8 +9,9 @@
     <h3>{{i.courseTitle}}</h3>
     {% for simage in i.assessmentPic.all %}
     {% if simage.image%}
-    <a href="#" class="image"><img src="{{ simage.image.url }}"></a>
+         <a href="#" class="image"><img src="{{ simage.image.url }}"></a>
     {% endif %}
+    <a href="{%url 'core:view_answers' i.id %}">answers</a>
     {%endfor%}
     {%endfor%}
 </div>

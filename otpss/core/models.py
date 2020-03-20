@@ -65,7 +65,7 @@ class Question(models.Model):
 class Answer(models.Model):
     question = models.ManyToManyField(
         Question,
-        related_name="question",
+        related_name="questionAnswer",
     )
 
     Answercontent = models.CharField(
@@ -78,13 +78,13 @@ class Answer(models.Model):
     votes = models.IntegerField(default=0)
 
 
-voteType = (
+voteType = [
     ('U', 'upvote'),
     ('D', 'downvote')
-)
+]
 
 
-class UserVotes(models.Model):
+class UserVote(models.Model):
     user = models.ForeignKey(User, related_name="user_votes",
                              on_delete=models.DO_NOTHING)
     answer = models.ForeignKey(Answer, related_name="answer_votes",

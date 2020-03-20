@@ -6,7 +6,7 @@ from .models import *
 from django.views import generic
 from .convert import *
 from django.utils import timezone
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404,redirect
 
 
 def search(request):
@@ -15,17 +15,21 @@ def search(request):
 
 def upvote(request, id_):
     """
-
-    :type id_: int
+    after clicking the upvote button answer.votes is incremented (will be used for sorting results) and a new vote
+    object is created :type id_: int
     """
     answer_ = get_object_or_404(Answer, pk=id_)
-    if request.method == 'POST':
+    if not request.method == 'POST':
         try:
             UserVotes.objects.create(user=request.user, answer=answer_, type='U')
             answer_.votes = + 1
             answer_.save()
+            print("works")
         except:
-            pass
+            print("error ")
+    else:
+        return redirect('core:upload')
+    return redirect('core:list')
 
 
 def upload_paper(request):
@@ -60,6 +64,10 @@ def upload_paper(request):
         imageformset = ImageFormSet(queryset=AssessmentImage.objects.none())
     return render(request, 'upload.html', {'form': assessmentForm, 'ImageForm': imageformset})
 
+
+def viewAnswers(request,id_):
+    question = get_object_or_404(Question,id=id_)
+    return render(request,'viewAnswers.html',{'question': question})
 
 class AssessmentListView(generic.ListView):
     model = Assessment

@@ -26,8 +26,7 @@ class SignUpForm(UserCreationForm):
 class UserProfileForm(forms.ModelForm):
     studentId = forms.CharField(
         widget=forms.widgets.TextInput(attrs={'placeholder': 'student id', 'class': 'form-control'}))
-    program = forms.CharField(
-        widget=forms.widgets.TextInput(attrs={'placeholder': 'course program', 'class': 'form-control'}))
+    program = forms.ChoiceField(label='',widget=forms.Select(), required=True)
 
     class Meta:
         model = UserProfile

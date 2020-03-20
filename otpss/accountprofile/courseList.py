@@ -110,3 +110,18 @@ listOfprograms = [
     , 'Diploma in Population Studies'
     , 'Diploma in Social Work (DSW)'
     , 'Diploma in Statistics', ]
+
+properList = []
+
+for i in listOfprograms:
+    if "Bachelor of" in i:
+        j = i.replace('Bachelor of ', "")
+        properList.append((j,i))
+    if "Combined Bachelor of" in i :
+        j = i.replace('Combined Bachelor of ', "")
+        properList.append((j, i))
+    if "Diploma in" in i:
+        j = i.replace('Diploma in ', "")
+        properList.append((j, i))
+
+print(properList)

@@ -1,0 +1,19 @@
+{% extends 'templates/base.html' %}
+
+
+{%block main %}
+<p>{{question.content}}</p>
+<h4>answers</h4>
+<div class="answers">
+    {% for i in question.questionAnswer.all %}
+    <p>olla</p>
+    <p>{{i.Answercontent}}</p>
+    <p>{{i.votes}}</p>
+    <form method="POST" class="post-form">
+        <a href="{% url 'core:upvote' i.id%}">upvote</a>
+    </form>
+
+{%endfor%}
+</div>
+
+{%endblock%}

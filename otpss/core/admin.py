@@ -14,3 +14,5 @@ class AssessmentAdmin(admin.ModelAdmin):
 admin.site.register(Assessment, AssessmentAdmin)
 admin.site.register(AssessmentImage)
 admin.site.register(Question)
+admin.site.register(Answer)
+admin.site.register(UserVote)
