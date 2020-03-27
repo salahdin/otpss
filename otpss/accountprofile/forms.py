@@ -2,6 +2,7 @@ from .models import UserProfile
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
+from .finallist import programList
 
 
 class SignUpForm(UserCreationForm):
@@ -26,7 +27,7 @@ class SignUpForm(UserCreationForm):
 class UserProfileForm(forms.ModelForm):
     studentId = forms.CharField(
         widget=forms.widgets.TextInput(attrs={'placeholder': 'student id', 'class': 'form-control'}))
-    program = forms.ChoiceField(label='',widget=forms.Select(), required=True)
+    program = forms.ChoiceField(label='program', widget=forms.Select(attrs={'class': 'form-control'}), choices=programList )
 
     class Meta:
         model = UserProfile

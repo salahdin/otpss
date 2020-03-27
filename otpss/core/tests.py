@@ -24,3 +24,12 @@ class AssessmentTest(TestCase):
             data={'courseCode': "CSI247", 'courseTitle': "data structure", 'assessmentDate': "2020-03-12",
                   'user': user})
         self.assertTrue(form.is_valid())
+
+
+class AnswerVoteTest(TestCase):
+    def setUp(self):
+        user = User.objects.create_user('foo', fake.email(), 'bar')
+        self.client.login(username='foo', password='bar')
+
+    def test_upvote_same_user(self):
+        pass

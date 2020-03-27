@@ -1,0 +1,24 @@
+{% extends 'templates/base.html' %}
+{% block main %}
+    <div class="col-8">
+        <div class="card">
+      <h5 class="card-header">{{assessment.courseCode}}</h5>
+      <div class="card-body">
+        <h5 class="card-title">{{assessment.courseTitle}}</h5>
+        <p class="card-text">assessment data : {{assessment.assessmentDate}}</p>
+        <a href="#" class="btn btn-primary">uploaded by : {{assessment.user}}</a>
+      </div>
+    </div>
+<br><br><br>
+        <div class="card">
+            {% for i in assessment.assessmentQuestion.all %}
+            <div class="card-body">
+                <p>{{i.content}}</p>
+                <a href="{%url 'core:view_answers' i.id %}" class="btn btn-primary">view answers</a>
+            </div>
+
+            {%endfor%}
+        </div>
+    </div>
+
+{% endblock %}

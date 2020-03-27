@@ -2,6 +2,14 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 from .validators import *
+from  .imagePreProcess import preProcessImage
+from io import BytesIO
+from django.core.files.uploadedfile import InMemoryUploadedFile
+import sys
+from PIL import Image
+from django.contrib.staticfiles.templatetags.staticfiles import static
+from django.conf import settings
+from django.core.files import File
 
 
 class Assessment(models.Model):
@@ -40,13 +48,18 @@ class Assessment(models.Model):
         on_delete=models.DO_NOTHING,
         null=True,
     )
+    description = models.TextField(
+        verbose_name="assessment description",
+        null=True,
+        blank=True
+    )
 
 
 class Question(models.Model):
     assessment = models.ForeignKey(
         Assessment,
         default=None,
-        related_name="assessment",
+        related_name="assessmentQuestion",
         on_delete=models.CASCADE,
         unique=False
     )
@@ -61,6 +74,8 @@ class Question(models.Model):
 
     )
 
+    def questionSnippet(self):
+        return self.content[:25]
 
 class Answer(models.Model):
     question = models.ManyToManyField(
@@ -104,3 +119,7 @@ class AssessmentImage(models.Model):
                                    related_name="assessmentPic"
                                    )
     image = models.ImageField(verbose_name='Image', upload_to='elements/')
+
+    def save(self, *args, **kwargs):
+        self.image = preProcessImage(self.image)
+        super().save(*args, **kwargs)

@@ -1,0 +1,48 @@
+{% extends 'templates/base.html' %}
+{% block main %}
+
+<center>
+    <form method="GET" action="{% url 'core:search' %}" >
+    <div class="input-group">
+        <div class="col-md-8">
+            <input class="form-control"  name="keyword" id="choices-text-preset-values" type="text" placeholder="Type to search..." />
+        </div>
+       <span class="input-group-btn">
+            <button class="btn btn-default" type="button">search</button>
+       </span>
+    </div>
+</form>
+</center>
+
+
+<br><br>
+<div class="col-md-4">
+    <div class="card">
+        <div class="card-body">
+            <h4 style="color: #00BCD4" class="card-title"> you searched for: "{{request.GET.keyword}}"</h4>
+            <h5 class="card-text">total results : {{ results|length }}</h5>
+        </div>
+    </div>
+</div>
+
+
+{% if not empty %}
+    {% for assessment in results %}
+    <div class="card">
+      <h5 class="card-header">{{assessment.courseCode}}</h5>
+      <div class="card-body">
+        <h5 class="card-title">{{assessment.courseTitle}}</h5>
+        <p class="card-text">assessment data : {{assessment.assessmentDate}}</p>
+          <a href="{% url 'core:assessment_detail_view' assessment.id %}" class="btn btn-primary">view paper</a>
+        <a href="#" class="btn btn-primary">uploaded by : {{assessment.user}}</a>
+      </div>
+    </div>
+    <br>
+    {%endfor%}
+{% elif results|length == 0 %}
+<h1>empty</h1>
+    <div class="alert alert-danger" role="alert">
+        <p>no results found</p>
+    </div>
+{% endif %}
+{%endblock%}
