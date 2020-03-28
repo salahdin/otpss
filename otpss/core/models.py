@@ -54,6 +54,9 @@ class Assessment(models.Model):
         blank=True
     )
 
+    def __str__(self):
+        return self.courseCode
+
 
 class Question(models.Model):
     assessment = models.ForeignKey(

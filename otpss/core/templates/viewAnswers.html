@@ -9,6 +9,9 @@
     <div class="card">
         <p>{{i.Answercontent}}</p>
         <p>{{i.votes}}</p>
+        {%if request.user in i.answer_votes.all %}
+            <p>works</p>
+        {% endif %}
         <a href="{% url 'core:upvote' i.id%}" class="btn btn-primary">upvote</a>
         <br>
         <a href="{% url 'core:downvote' i.id%}" class="btn btn-primary">downvote</a>

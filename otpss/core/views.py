@@ -9,9 +9,8 @@ from django.utils import timezone
 from django.shortcuts import get_object_or_404, redirect, render_to_response
 from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
 from django.views.generic import ListView
-from django.db.models import Q
-from .imagePreProcess import preProcessImage
-from django.core.files import File
+from .idquestion import splitParagraph
+
 
 def homepage(request):
     return render(request, "index.html")
@@ -19,7 +18,7 @@ def homepage(request):
 
 class AssessmentSearchView(ListView):
     model = Assessment
-    paginate_by = 10
+    paginate_by = 5
     template_name = "resultPage.html"
     context_object_name = 'results'
 
@@ -31,11 +30,10 @@ class AssessmentSearchView(ListView):
             courseTitle_vector = SearchVector('courseTitle', weight='B')
             assessmentContent_vector = SearchVector('assessmentQuestion__content', weight='C')
             vectors = courseCode_vector + courseTitle_vector + assessmentContent_vector
-            result = Assessment.objects.annotate(search=vectors).filter(search=query)
+            result = Assessment.objects.annotate(search=vectors).filter(search__icontains=keyword)
             result = result.annotate(rank=SearchRank(vectors, query)).order_by('-rank')
 
             return result
-        return {'error': 'no results '}
 
 
 def upvote(request, id_):
@@ -99,8 +97,10 @@ def upload_paper(request):
                     photo = AssessmentImage(assessment=assessment_form, image=image)
                     text += convert_img_to_txt(image)
                     photo.save()
-            Question.objects.create(assessment=assessment_form, content=text, date=timezone.now())
-            return HttpResponseRedirect("/")
+            for i in splitParagraph(text):
+                Question.objects.create(assessment=assessment_form, content=i, date=timezone.now())
+
+            return redirect('core:list')
     else:
         assessmentForm = AssessmentForm()
         imageformset = ImageFormSet(queryset=AssessmentImage.objects.none())
@@ -109,6 +109,8 @@ def upload_paper(request):
 
 def viewAnswers(request, id_):
     question = get_object_or_404(Question, id=id_)
+    lst = question.questionAnswer.all()
+    print(lst)
     return render(request, 'viewAnswers.html', {'question': question})
 
 

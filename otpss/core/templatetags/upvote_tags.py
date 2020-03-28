@@ -3,8 +3,11 @@ from django import template
 register = template.Library()
 
 @register.simple_tag
-def upvote_tags(answer, user):
-    return user.id not in answer.answer_votes.all().values_list('user',)
+def has_voted(answer, user):
+    lst=answer.answer_votes.all().values_list('user', )
+    if user in lst:
+        return True
+    return False
 
 
 

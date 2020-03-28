@@ -1,18 +1,18 @@
 {% extends 'templates/base.html' %}
 {% block main %}
 
-<center>
+<div style="text-align: center;">
     <form method="GET" action="{% url 'core:search' %}" >
     <div class="input-group">
         <div class="col-md-8">
             <input class="form-control"  name="keyword" id="choices-text-preset-values" type="text" placeholder="Type to search..." />
         </div>
        <span class="input-group-btn">
-            <button class="btn btn-default" type="button">search</button>
+            <input class="btn btn-default" name="search" value="search" type="submit">
        </span>
     </div>
 </form>
-</center>
+</div>
 
 
 <br><br>
@@ -44,5 +44,27 @@
     <div class="alert alert-danger" role="alert">
         <p>no results found</p>
     </div>
+{% endif %}
+
+{% if is_paginated %}
+  <ul class="pagination">
+    {% if page_obj.has_previous %}
+      <li><a href="?keyword={{request.GET.keyword}}&page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&laquo;</span></li>
+    {% endif %}
+    {% for i in paginator.page_range %}
+      {% if page_obj.number == i %}
+        <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+      {% else %}
+        <li><a href="?keyword={{request.GET.keyword}}&page={{ i }}">{{ i }}</a></li>
+      {% endif %}
+    {% endfor %}
+    {% if page_obj.has_next %}
+      <li><a href="?keyword={{request.GET.keyword}}&page={{ page_obj.next_page_number }}">&raquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&raquo;</span></li>
+    {% endif %}
+  </ul>
 {% endif %}
 {%endblock%}
