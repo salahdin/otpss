@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'django_bootstrap_base_template',
     'django_extensions',
+    'hitcount',
 ]
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 MIDDLEWARE = [

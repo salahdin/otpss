@@ -10,6 +10,7 @@ from django.shortcuts import get_object_or_404, redirect, render_to_response
 from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
 from django.views.generic import ListView
 from .idquestion import splitParagraph
+from hitcount.views import HitCountDetailView
 
 
 def homepage(request):
@@ -131,6 +132,16 @@ class AssessmentListView(generic.ListView):
         return assessment"""
 
 
-def viewAssessment(request, id_):
-    assessment: Assessment = get_object_or_404(Assessment, id=id_)
-    return render(request, 'assessmentDetailView.html', {'assessment': assessment})
+class AssessmentDetailView(HitCountDetailView):
+    model = Assessment
+    template_name = 'assessmentDetailView.html'
+    context_object_name = 'assessment'
+    count_hit = True
+
+    def get_context_data(self, **kwargs):
+        context = super(AssessmentDetailView, self).get_context_data(**kwargs)
+        context.update({
+            'popular_posts': Assessment.objects.order_by('-hit_count_generic__hits')[:3],
+        })
+        return context
+

@@ -2,14 +2,9 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 from .validators import *
-from  .imagePreProcess import preProcessImage
-from io import BytesIO
-from django.core.files.uploadedfile import InMemoryUploadedFile
-import sys
-from PIL import Image
-from django.contrib.staticfiles.templatetags.staticfiles import static
-from django.conf import settings
-from django.core.files import File
+from .imagePreProcess import preProcessImage
+from hitcount.models import HitCountMixin, HitCount
+from django.contrib.contenttypes.fields import GenericRelation
 
 
 class Assessment(models.Model):
@@ -22,7 +17,7 @@ class Assessment(models.Model):
     )
 
     courseTitle = models.CharField(
-        verbose_name="course title of assessment",
+        verbose_name="course title of assessments",
         max_length=100,
         null=True,
         blank=True,
@@ -53,6 +48,9 @@ class Assessment(models.Model):
         null=True,
         blank=True
     )
+    hit_count_generic = GenericRelation(
+        HitCount, object_id_field='object_pk',
+        related_query_name='hit_count_generic_relation')
 
     def __str__(self):
         return self.courseCode

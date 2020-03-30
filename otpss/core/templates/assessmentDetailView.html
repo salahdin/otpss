@@ -1,4 +1,6 @@
 {% extends 'templates/base.html' %}
+{% load hitcount_tags %}
+
 {% block main %}
     <div class="col-8">
         <div class="card">
@@ -7,8 +9,11 @@
         <h5 class="card-title">{{assessment.courseTitle}}</h5>
         <p class="card-text">assessment data : {{assessment.assessmentDate}}</p>
         <a href="#" class="btn btn-primary">uploaded by : {{assessment.user}}</a>
+          <p class="card-text">Views: {% get_hit_count for assessment %}</p>
       </div>
     </div>
+
+
 <br><br><br>
         <div class="card">
             {% for i in assessment.assessmentQuestion.all %}
