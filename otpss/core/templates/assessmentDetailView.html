@@ -9,7 +9,9 @@
         <h5 class="card-title">{{assessment.courseTitle}}</h5>
         <p class="card-text">assessment data : {{assessment.assessmentDate}}</p>
         <a href="#" class="btn btn-primary">uploaded by : {{assessment.user}}</a>
-          <p class="card-text">Views: {% get_hit_count for assessment %}</p>
+          <div style="color: #00A000">
+              <p class="card-text" style="text-align: right">Views: {% get_hit_count for assessment %}</p>
+          </div>
       </div>
     </div>
 

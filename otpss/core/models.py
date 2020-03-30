@@ -78,6 +78,7 @@ class Question(models.Model):
     def questionSnippet(self):
         return self.content[:25]
 
+
 class Answer(models.Model):
     question = models.ManyToManyField(
         Question,
@@ -124,3 +125,7 @@ class AssessmentImage(models.Model):
     def save(self, *args, **kwargs):
         self.image = preProcessImage(self.image)
         super().save(*args, **kwargs)
+
+
+class AssessmentFile(models.Model):
+    pass

@@ -76,12 +76,9 @@ def downvote(request, id_):
 
 
 def upload_paper(request):
-    ImageFormSet = modelformset_factory(AssessmentImage,
-                                        form=ImageForm, extra=3)
     if request.method == 'POST':
         assessmentForm = AssessmentForm(request.POST)
-        imageformset = ImageFormSet(request.POST, request.FILES,
-                                    queryset=AssessmentImage.objects.none())
+        imageformset = ImageForm(request.POST, request.FILES)
 
         if assessmentForm.is_valid() and imageformset.is_valid():
             assessment_form = assessmentForm.save(commit=False)
@@ -92,19 +89,17 @@ def upload_paper(request):
             assessment_form.save()
 
             text = ""
-            for form in imageformset.cleaned_data:
-                if form:
-                    image = form['image']
-                    photo = AssessmentImage(assessment=assessment_form, image=image)
-                    text += convert_img_to_txt(image)
-                    photo.save()
+            for image in request.FILES.getlist('image'):
+                photo = AssessmentImage(assessment=assessment_form, image=image)
+                text += convert_img_to_txt(image)
+                photo.save()
             for i in splitParagraph(text):
                 Question.objects.create(assessment=assessment_form, content=i, date=timezone.now())
 
             return redirect('core:list')
     else:
         assessmentForm = AssessmentForm()
-        imageformset = ImageFormSet(queryset=AssessmentImage.objects.none())
+        imageformset = ImageForm()
     return render(request, 'upload.html', {'form': assessmentForm, 'ImageForm': imageformset})
 
 
