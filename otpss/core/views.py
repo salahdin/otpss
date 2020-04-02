@@ -74,11 +74,12 @@ def downvote(request, id_):
         return redirect('core:upload')
     return redirect('core:list')
 
-
+@login_required
 def upload_paper(request):
     if request.method == 'POST':
         assessmentForm = AssessmentForm(request.POST)
         imageformset = ImageForm(request.POST, request.FILES)
+        common_tags = Assessment.tags.most_common()[:4]
 
         if assessmentForm.is_valid() and imageformset.is_valid():
             assessment_form = assessmentForm.save(commit=False)
@@ -87,7 +88,7 @@ def upload_paper(request):
             assessment_form.courseCode = course_Code
             assessment_form.user = request.user
             assessment_form.save()
-
+            assessmentForm.save_m2m()
             text = ""
             for image in request.FILES.getlist('image'):
                 photo = AssessmentImage(assessment=assessment_form, image=image)
@@ -96,11 +97,11 @@ def upload_paper(request):
             for i in splitParagraph(text):
                 Question.objects.create(assessment=assessment_form, content=i, date=timezone.now())
 
-            return redirect('core:list')
+            return HttpResponseRedirect("")
     else:
         assessmentForm = AssessmentForm()
         imageformset = ImageForm()
-    return render(request, 'upload.html', {'form': assessmentForm, 'ImageForm': imageformset})
+    return render(request, 'upload.html', {'form': assessmentForm, 'ImageForm': imageformset,'common_tags':common_tags})
 
 
 def viewAnswers(request, id_):
@@ -110,21 +111,12 @@ def viewAnswers(request, id_):
     return render(request, 'viewAnswers.html', {'question': question})
 
 
+# i dont need this
 class AssessmentListView(generic.ListView):
     model = Assessment
     context_object_name = 'assessments'
     paginate_by = 5
     template_name = 'list_view.html'
-
-
-"""class AssessmentDetailView(generic.DetailView):
-    model = Assessment
-    template_name = 'assessmentDetailView.html'
-    context_object_name = 'assessment'
-
-    def get_queryset(self, id, *args, **kwargs):
-        assessment = get_object_or_404(Assessment, id=id)
-        return assessment"""
 
 
 class AssessmentDetailView(HitCountDetailView):
@@ -134,9 +126,14 @@ class AssessmentDetailView(HitCountDetailView):
     count_hit = True
 
     def get_context_data(self, **kwargs):
+        myassessment = self.object
         context = super(AssessmentDetailView, self).get_context_data(**kwargs)
         context.update({
             'popular_posts': Assessment.objects.order_by('-hit_count_generic__hits')[:3],
+            'similar_objects': myassessment.tags.similar_objects()[:3],
         })
         return context
 
+
+def answerQuestion(request):
+    pass

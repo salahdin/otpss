@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django_bootstrap_base_template',
     'django_extensions',
     'hitcount',
+    'taggit',
 ]
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 MIDDLEWARE = [
@@ -137,3 +138,4 @@ STATIC_DIRS = (
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+TAGGIT_CASE_INSENSITIVE = True

@@ -1,5 +1,5 @@
 from django import forms
-from .models import Assessment, AssessmentImage
+from .models import Assessment, AssessmentImage,Answer
 
 
 class DateInput(forms.DateInput):
@@ -22,3 +22,10 @@ class ImageForm(forms.ModelForm):
     class Meta:
         model = AssessmentImage
         fields = ('image',)
+
+
+class AnswerForm(forms.ModelForm):
+
+    class Meta:
+        model=Answer
+        fields=('Answercontent',)

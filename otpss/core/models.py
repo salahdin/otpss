@@ -5,6 +5,7 @@ from .validators import *
 from .imagePreProcess import preProcessImage
 from hitcount.models import HitCountMixin, HitCount
 from django.contrib.contenttypes.fields import GenericRelation
+from taggit.managers import TaggableManager
 
 
 class Assessment(models.Model):
@@ -51,6 +52,7 @@ class Assessment(models.Model):
     hit_count_generic = GenericRelation(
         HitCount, object_id_field='object_pk',
         related_query_name='hit_count_generic_relation')
+    tags = TaggableManager()
 
     def __str__(self):
         return self.courseCode
@@ -85,8 +87,7 @@ class Answer(models.Model):
         related_name="questionAnswer",
     )
 
-    Answercontent = models.CharField(
-        max_length=500,
+    Answercontent = models.TextField(
         verbose_name="content of question"
     )
 

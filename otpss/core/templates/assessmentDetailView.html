@@ -2,8 +2,11 @@
 {% load hitcount_tags %}
 
 {% block main %}
-    <div class="col-8">
-        <div class="card">
+
+<div class="container" style="display: flex">
+
+<div class="col-8">
+    <div class="card">
       <h5 class="card-header">{{assessment.courseCode}}</h5>
       <div class="card-body">
         <h5 class="card-title">{{assessment.courseTitle}}</h5>
@@ -12,20 +15,36 @@
           <div style="color: #00A000">
               <p class="card-text" style="text-align: right">Views: {% get_hit_count for assessment %}</p>
           </div>
-      </div>
+        </div>
     </div>
 
 
 <br><br><br>
+
+
         <div class="card">
             {% for i in assessment.assessmentQuestion.all %}
             <div class="card-body">
-                <p>{{i.content}}</p>
+                <p class="card-text">{{i.content}}</p>
                 <a href="{%url 'core:view_answers' i.id %}" class="btn btn-primary">view answers</a>
             </div>
 
             {%endfor%}
         </div>
-    </div>
+</div>
+        <div class="col-4" >
+            <h5>similar assessments</h5>
+            <div class="card">
+            {% for i in similar_objects %}
+                <a href="{% url 'core:assessment_detail_view' i.id %}" ><p class="card-header">{{i.courseCode}} from {{i.assessmentDate}}</p></a>
+                <div class="card-body">
+                    <h5 class="card-title">{{i.courseTitle}}</h5>
+                    <p>{{i.courseCode}}</p>
 
+                </div>
+            {%endfor%}
+            </div>
+
+        </div>
+</div>
 {% endblock %}
