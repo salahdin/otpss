@@ -1,6 +1,6 @@
 # online test paper sharing platform
-## objectives
-•	Allow sharing of past test papers in image (jpg, png) or text format (pdf, Docx, etc).
+## objectives 
+•	Allow sharing of past test papers in image (jpg, png) or text format (pdf, Docx, etc).\n
 •	To allow users to search test papers by the content.
 •	Index questions from image files using OCR technology
 •	Allow users to provide a solution to individual questions via text or pictures 
