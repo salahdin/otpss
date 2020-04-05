@@ -23,7 +23,7 @@
     <div class="card">
         <div class="card-body">
             <h4 style="color: #00BCD4" class="card-title"> you searched for: "{{request.GET.keyword}}"</h4>
-            <h5 class="card-text">total results : {{ results|length }}</h5>
+            <h5 class="card-text">total results : {{ paginator.count }}</h5>
         </div>
     </div>
 </div>
@@ -36,9 +36,13 @@
       <div class="card-body">
         <h5 class="card-title">{{assessment.courseTitle}}</h5>
         <p class="card-text">assessment data : {{assessment.assessmentDate}}</p>
-          <span class="glyphicon glyphicon-eye-open"></span>  <p> {% get_hit_count for assessment %}</p>
+          <span class="glyphicon glyphicon-eye-open"></span>  <p> Views : {% get_hit_count for assessment %}</p>
           <a href="{% url 'core:assessment_detail_view' assessment.id %}" class="btn btn-primary">view paper</a>
-        <a href="#" class="btn btn-primary">uploaded by : {{assessment.user}}</a>
+        <div style="display:flex">
+            {% for tag in assessment.tags.all %}
+                <a href="#" class="mr-1 badge badge-info">#{{ tag }}</a>
+            {% endfor %}
+        </div>
       </div>
     </div>
     <br>

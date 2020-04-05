@@ -17,7 +17,7 @@ class AssessmentForm(forms.ModelForm):
 
 
 class ImageForm(forms.ModelForm):
-    image = forms.FileField(widget=forms.ClearableFileInput(attrs={'multiple': True}))
+    image = forms.FileField(widget=forms.ClearableFileInput(attrs={'multiple': True, 'id': "files", 'name': "files[]"}))
 
     class Meta:
         model = AssessmentImage

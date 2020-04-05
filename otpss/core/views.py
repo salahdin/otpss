@@ -11,6 +11,7 @@ from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
 from django.views.generic import ListView
 from .idquestion import splitParagraph
 from hitcount.views import HitCountDetailView
+from django.db.models import Subquery
 
 
 def homepage(request):
@@ -26,13 +27,16 @@ class AssessmentSearchView(ListView):
     def get_queryset(self):
         keyword = self.request.GET.get('keyword')
         if keyword:
+            if ',' in keyword:
+                keyword = keyword.replace(',', " ")
             query = SearchQuery(keyword)
             courseCode_vector = SearchVector('courseCode', weight='A')
             courseTitle_vector = SearchVector('courseTitle', weight='B')
             assessmentContent_vector = SearchVector('assessmentQuestion__content', weight='C')
-            vectors = courseCode_vector + courseTitle_vector + assessmentContent_vector
-            result = Assessment.objects.annotate(search=vectors).filter(search__icontains=keyword)
-            result = result.annotate(rank=SearchRank(vectors, query)).order_by('-rank')
+            assessmentTag_vector = SearchVector('tags',weight='D')
+            vectors = courseCode_vector + courseTitle_vector + assessmentContent_vector + assessmentTag_vector
+            result = Assessment.objects.annotate(search=vectors).filter(search=query)
+            result = result.annotate(rank=SearchRank(vectors, query)).order_by('-rank').distinct()
 
             return result
 
@@ -76,10 +80,11 @@ def downvote(request, id_):
 
 @login_required
 def upload_paper(request):
+    common_tags = Assessment.tags.most_common()[:4]
     if request.method == 'POST':
         assessmentForm = AssessmentForm(request.POST)
         imageformset = ImageForm(request.POST, request.FILES)
-        common_tags = Assessment.tags.most_common()[:4]
+
 
         if assessmentForm.is_valid() and imageformset.is_valid():
             assessment_form = assessmentForm.save(commit=False)
