@@ -82,8 +82,10 @@ class Question(models.Model):
 
 
 class Answer(models.Model):
-    question = models.ManyToManyField(
+    question = models.ForeignKey(
         Question,
+        null=True,
+        on_delete=models.CASCADE,
         related_name="questionAnswer",
     )
 

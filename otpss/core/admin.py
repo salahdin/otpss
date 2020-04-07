@@ -12,8 +12,17 @@ class AssessmentAdmin(admin.ModelAdmin):
     search_fields = ['courseCode', ]
 
 
+class QuestionAdmin(admin.ModelAdmin):
+    list_display = ('assessment', 'questionSnippet', 'date')
+    search_fields = ['content']
+
+
+class AnswerAdmin(admin.ModelAdmin):
+    list_display = ('Answercontent', 'user', 'created', 'votes')
+
+
 admin.site.register(Assessment, AssessmentAdmin)
 admin.site.register(AssessmentImage)
-admin.site.register(Question)
-admin.site.register(Answer)
+admin.site.register(Question, QuestionAdmin)
+admin.site.register(Answer, AnswerAdmin)
 admin.site.register(UserVote)

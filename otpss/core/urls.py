@@ -14,5 +14,10 @@ urlpatterns = [
     path('downvote/<int:id_>', views.downvote, name="downvote"),
     path('assessment/<int:pk>', views.AssessmentDetailView.as_view(), name="assessment_detail_view"),
     path('hitcount/', include(('hitcount.urls', 'hitcount'), namespace='hitcount')),
+    path('tagged/<slug:slug>', views.taggedAssessemnt, name='tagged'),
 
-    ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    ]
+
+"""if settings.DEBUG:
+    #urlpatterns= urlpatterns + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns= urlpatterns + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)"""

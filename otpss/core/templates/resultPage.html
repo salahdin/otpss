@@ -22,8 +22,12 @@
 <div class="col-md-4">
     <div class="card">
         <div class="card-body">
-            <h4 style="color: #00BCD4" class="card-title"> you searched for: "{{request.GET.keyword}}"</h4>
-            <h5 class="card-text">total results : {{ paginator.count }}</h5>
+            {% if tag %}
+                 <h4 style="color: dodgerblue"><a href="{% url 'core:tagged' tag %}" class="mr-1 badge badge-info">{{ tag }}</a></h4>
+            {% else %}
+                <h4 style="color: #00BCD4" class="card-title"> you searched for: "{{request.GET.keyword}}"</h4>
+                <h5 class="card-text">total results : {{ paginator.count }}</h5>
+            {% endif %}
         </div>
     </div>
 </div>
@@ -38,9 +42,12 @@
         <p class="card-text">assessment data : {{assessment.assessmentDate}}</p>
           <span class="glyphicon glyphicon-eye-open"></span>  <p> Views : {% get_hit_count for assessment %}</p>
           <a href="{% url 'core:assessment_detail_view' assessment.id %}" class="btn btn-primary">view paper</a>
-        <div style="display:flex">
+          <br>
+          <br>
+        <div  style="display:flex">
+            <br>
             {% for tag in assessment.tags.all %}
-                <a href="#" class="mr-1 badge badge-info">#{{ tag }}</a>
+                <a href="{% url 'core:tagged' tag.slug %}" class="mr-1 badge badge-info">#{{ tag }}</a>
             {% endfor %}
         </div>
       </div>

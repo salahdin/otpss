@@ -4,12 +4,31 @@
 {% block main %}
 
 <div class="container" style="display: flex">
-
 <div class="col-8">
-    <div class="card">
+    <div class="hidden" id="Images" style="display: none">
+        {% for simage in assessment.assessmentPic.all %}
+            {% if simage.image%}
+            <div class="card bg-dark text-white">
+              <img class="card-img" src="{{simage.image.url}}" alt="Card image">
+              <div class="card-img-overlay">
+
+              </div>
+            </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+
+
+    <button id= "hidebutton" class="btn btn-outline-secondary" onclick="myFunction()">display image instead</button>
+    <div class="card" id="core">
       <h5 class="card-header">{{assessment.courseCode}}</h5>
       <div class="card-body">
         <h5 class="card-title">{{assessment.courseTitle}}</h5>
+          <div style="display:flex">
+            {% for tag in assessment.tags.all %}
+                <a href="{% url 'core:tagged' tag.slug %}" class="mr-1 badge badge-info">#{{ tag }}</a>
+            {% endfor %}
+          </div>
         <p class="card-text">assessment data : {{assessment.assessmentDate}}</p>
         <a href="#" class="btn btn-primary">uploaded by : {{assessment.user}}</a>
           <div style="color: #00A000">
@@ -46,5 +65,23 @@
             </div>
 
         </div>
+    <script>
+        function myFunction() {
+          var x = document.getElementById("Images");
+          var y = document.getElementById("core");
+          var z = document.getElementById("hidebutton");
+          if (x.style.display === "none") {
+            x.style.display = "block";
+            y.style.display = "none";
+            z.innerHTML = "display question cards";
+          } else {
+            x.style.display = "none";
+            y.style.display = "block";
+            z.innerHTML = "display images instead";
+          }
+        }
+    </script>
 </div>
+
+
 {% endblock %}

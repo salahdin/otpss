@@ -25,7 +25,7 @@ class ImageForm(forms.ModelForm):
 
 
 class AnswerForm(forms.ModelForm):
-
+    Answercontent = forms.CharField(widget=forms.Textarea,label='')
     class Meta:
         model=Answer
         fields=('Answercontent',)

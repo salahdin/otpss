@@ -11,8 +11,8 @@ from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
 from django.views.generic import ListView
 from .idquestion import splitParagraph
 from hitcount.views import HitCountDetailView
-from django.db.models import Subquery
-
+from taggit.models import Tag
+import operator
 
 def homepage(request):
     return render(request, "index.html")
@@ -26,19 +26,20 @@ class AssessmentSearchView(ListView):
 
     def get_queryset(self):
         keyword = self.request.GET.get('keyword')
+        keyword = keyword.replace(',', " ")
+        print(keyword)
         if keyword:
-            if ',' in keyword:
-                keyword = keyword.replace(',', " ")
             query = SearchQuery(keyword)
             courseCode_vector = SearchVector('courseCode', weight='A')
             courseTitle_vector = SearchVector('courseTitle', weight='B')
             assessmentContent_vector = SearchVector('assessmentQuestion__content', weight='C')
-            assessmentTag_vector = SearchVector('tags',weight='D')
-            vectors = courseCode_vector + courseTitle_vector + assessmentContent_vector + assessmentTag_vector
-            result = Assessment.objects.annotate(search=vectors).filter(search=query)
-            result = result.annotate(rank=SearchRank(vectors, query)).order_by('-rank').distinct()
+            vectors = courseCode_vector + courseTitle_vector + assessmentContent_vector
+            result = Assessment.objects.annotate(search=vectors).filter(search__icontains=keyword)
 
-            return result
+            result = result.annotate(rank=SearchRank(vectors, query)).order_by('id','-rank').distinct('id')
+            finalQueryset = sorted(result, key=operator.attrgetter('rank'), reverse=True)
+
+            return finalQueryset[:100]
 
 
 def upvote(request, id_):
@@ -112,8 +113,18 @@ def upload_paper(request):
 def viewAnswers(request, id_):
     question = get_object_or_404(Question, id=id_)
     lst = question.questionAnswer.all()
-    print(lst)
-    return render(request, 'viewAnswers.html', {'question': question})
+
+    if request.method == 'POST':
+        answerForm = AnswerForm(request.POST)
+        if answerForm.is_valid():
+            answer_form = answerForm.save(commit = False)
+            answer_form.question = question
+            answer_form.user = request.user
+            answer_form.created = timezone.now()
+            answer_form.save()
+            return redirect('/')
+    answerForm = AnswerForm()
+    return render(request, 'viewAnswers.html', {'question': question,'answerForm': answerForm})
 
 
 # i dont need this
@@ -140,5 +151,12 @@ class AssessmentDetailView(HitCountDetailView):
         return context
 
 
-def answerQuestion(request):
-    pass
+def taggedAssessemnt(request, slug):
+    tag = get_object_or_404(Tag, slug=slug)
+    assessments = Assessment.objects.filter(tags=tag)
+
+    context = {
+        'tag': tag,
+        'results': assessments,
+    }
+    return render(request, 'resultPage.html', context)
