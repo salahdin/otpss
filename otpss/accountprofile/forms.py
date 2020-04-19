@@ -25,13 +25,14 @@ class SignUpForm(UserCreationForm):
 
 
 class UserProfileForm(forms.ModelForm):
+    avatar = forms.ImageField(widget=forms.widgets.FileInput(attrs={'class': 'avatar avatar-24 img-circle'}))
     studentId = forms.CharField(
         widget=forms.widgets.TextInput(attrs={'placeholder': 'student id', 'class': 'form-control'}))
-    program = forms.ChoiceField(label='program', widget=forms.Select(attrs={'class': 'form-control'}), choices=programList )
+    program = forms.ChoiceField(label='program', widget=forms.Select(attrs={'class': 'form-control'}), choices=programList)
 
     class Meta:
         model = UserProfile
-        fields = ['studentId', 'program']
+        fields = ['avatar', 'studentId', 'program']
 
 
 class SignInForm(AuthenticationForm):
@@ -39,3 +40,5 @@ class SignInForm(AuthenticationForm):
         widget=forms.widgets.TextInput(attrs={'placeholder': 'Username', 'class': 'form-control'}))
     password = forms.CharField(
         widget=forms.widgets.PasswordInput(attrs={'placeholder': 'Password', 'class': 'form-control'}))
+
+

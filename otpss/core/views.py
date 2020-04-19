@@ -8,14 +8,16 @@ from .convert import *
 from django.utils import timezone
 from django.shortcuts import get_object_or_404, redirect, render_to_response
 from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
-from django.views.generic import ListView
+from django.views.generic import ListView,TemplateView
 from .idquestion import splitParagraph
 from hitcount.views import HitCountDetailView
 from taggit.models import Tag
 import operator
 
+
 def homepage(request):
-    return render(request, "index.html")
+    context = {'popular_posts': Assessment.objects.order_by('courseCode')[:3]}
+    return render(request, "index.html", context)
 
 
 class AssessmentSearchView(ListView):
@@ -81,11 +83,12 @@ def downvote(request, id_):
 
 @login_required
 def upload_paper(request):
+    if request.user == None:
+        return redirect('/')
     common_tags = Assessment.tags.most_common()[:4]
     if request.method == 'POST':
         assessmentForm = AssessmentForm(request.POST)
         imageformset = ImageForm(request.POST, request.FILES)
-
 
         if assessmentForm.is_valid() and imageformset.is_valid():
             assessment_form = assessmentForm.save(commit=False)

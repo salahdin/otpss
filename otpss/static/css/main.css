@@ -15,7 +15,7 @@ html {
  */
 body {
   margin: 0;
-  background-image: url('img_girl.jpg');
+  background-color: ActiveBorder;
 }
 
 /**
@@ -518,7 +518,7 @@ legend {
 }
 
 .choices[data-type*="select-one"] .choices__button:focus {
-  box-shadow: 0px 0px 0px 2px #00BCD4;
+  box-shadow: 0px 0px 0px 2px #00bcd4;
 }
 
 .choices[data-type*="select-one"]:after {

@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django_extensions',
     'hitcount',
     'taggit',
+    'jet_django',
 ]
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 MIDDLEWARE = [
@@ -142,3 +143,6 @@ MEDIA_ROOT= os.path.join(BASE_DIR, "media")
 MEDIA_URL = '/media/'
 
 TAGGIT_CASE_INSENSITIVE = True
+
+JET_PROJECT = 'online_test_paper_and_solution_sharing_system'
+JET_TOKEN = 'cfd5e9c0-a00e-4996-b69d-7392e7fda4ea'

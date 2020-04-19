@@ -11,15 +11,22 @@
 
   <body style="padding-top: 80px;">
     <!-- Navbar -->
+
     <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
 
+      {% if request.user.is_authenticated %}
+        <img src="..." alt="..." class="img-thumbnail nav-item">
+        <p class="font-italic text-light nav-item "  style="text-align: left">hello, {{request.user}}</p>
+      {% endif %}
+
       <div class="collapse navbar-collapse" id="navbarsExampleDefault">
-        <ul class="navbar-nav mr-auto">
-          {% if request.user.is_authenticated %}
-            <li class="nav-item">
+        {% if request.user.is_authenticated %}
+        <ul class="navbar-nav ml-auto" >
+
+            <li class="nav-item ">
               <a class="nav-link" href="{%url 'core:home_page'%}">Home</a>
             </li>
             <li class="nav-item">
@@ -28,10 +35,25 @@
             <li class="nav-item">
               <a class="nav-link" href="{% url 'accounts:logout' %}">Sign out</a>
             </li>
-          {% endif %}
         </ul>
+        {% else %}
+          <ul class="navbar-nav ml-auto" >
+
+            <li class="nav-item ">
+              <a class="nav-link" href="/">sign in</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{%url 'core:upload'%}">upload</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'accounts:logout' %}">about</a>
+            </li>
+        </ul>
+        {% endif %}
       </div>
+
     </nav>
+
     <!-- End Navbar -->
 
     <!-- Main -->

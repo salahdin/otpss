@@ -2,10 +2,9 @@
 {% load crispy_forms_tags %}
 
 {% block main %}
-<div class="container">
+
+<div class="col-8">
     <p>please complete the form before uploading</p>
-    <div class="col-md-8">
-        <div class="d-flex justify-content-center">
     <form method="POST" class="post-form" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form|crispy }}
@@ -15,10 +14,8 @@
         </div>
      <button type="submit" class="save btn btn-default">Save</button>
     </form>
-        </div>
-    </div>
 
-
+</div>
 
 <script>
   function handleFileSelect(evt) {
@@ -53,6 +50,6 @@
   document.getElementById('files').addEventListener('change', handleFileSelect, false);
 </script>
 
-</div>
+
 
 {% endblock %}

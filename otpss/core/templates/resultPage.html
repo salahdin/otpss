@@ -42,6 +42,7 @@
         <p class="card-text">assessment data : {{assessment.assessmentDate}}</p>
           <span class="glyphicon glyphicon-eye-open"></span>  <p> Views : {% get_hit_count for assessment %}</p>
           <a href="{% url 'core:assessment_detail_view' assessment.id %}" class="btn btn-primary">view paper</a>
+          <a href="{% url 'accounts:profileDetailView' assessment.user.id %}" class="btn btn-primary">{{assessment.user}}</a>
           <br>
           <br>
         <div  style="display:flex">

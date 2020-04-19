@@ -1,30 +1,10 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect,get_object_or_404
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login, logout,authenticate
 from . forms import *
+from .models import UserProfile
+from django.contrib.auth.models import User
 
-
-# Create your views here.
-"""def signup_view(request):
-    if request.method == 'POST':
-        form = SignUpForm(request.POST)
-        profileform = UserProfileForm(request.POST)
-        if form.is_valid() and profileform.is_valid():
-            user = form.save()
-            username = form.cleaned_data.get('username')
-            raw_password = form.cleaned_data.get('password1')
-            user = authenticate(username=username, password=raw_password)
-            profile = profileform.save(commit=False)
-            profile.user = user
-            profile.save()
-            # remember to log the user in
-            login(request, user)
-            return redirect('accounts:login')
-    else:
-        form = SignUpForm()
-        profileform = UserProfileForm()
-    return render(request, 'accounts/signup.html', {'form': form , 'profile':profileform})
-"""
 
 def login_view(request):
     if request.method == 'POST':
@@ -75,3 +55,15 @@ def frontpage(request):
         profileform = UserProfileForm()
 
     return render(request, 'frontpage.html', {'signupform': signupform, 'signinform': signinform, 'profileform':profileform })
+
+
+def profileDetailView(request, id_):
+    if request.user.is_authenticated:
+        person = get_object_or_404(User, id=id_)
+        person_profile = person.profile
+
+        return render(request, 'profileview.html', {'person': person, 'person_profile': person_profile})
+    return redirect('/')
+
+
+
