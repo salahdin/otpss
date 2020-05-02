@@ -52,13 +52,13 @@
 </div>
 
 <div class="col-md-6">
-<p class="card-text"><small class="text-muted">provide answer for the question</small></p>
-<div class="userAnswer">
-    <form method="POST" class="post-form" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{answerForm|crispy}}
-        <button type="submit" class="save btn btn-default">Save</button>
-    </form>
-</div>
+    <p class="card-text"><small class="text-muted">provide answer for the question</small></p>
+    <div class="userAnswer">
+        <form method="POST" class="post-form" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{answerForm|crispy}}
+            <button type="submit" class="save btn btn-default">Save</button>
+        </form>
+    </div>
 </div>
 {%endblock%}

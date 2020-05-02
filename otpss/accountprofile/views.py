@@ -25,6 +25,7 @@ def logout_view(request):
 
 
 def frontpage(request):
+    profileform = UserProfileForm()
     if request.method == 'POST':
         if 'signupform' in request.POST:
             signupform = SignUpForm(data=request.POST)
@@ -66,4 +67,5 @@ def profileDetailView(request, id_):
     return redirect('/')
 
 
-
+def editProfile(request, id_):
+    pass

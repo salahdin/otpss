@@ -9,16 +9,23 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
   </head>
 
+  <style>
+    .topthing{
+     background-image: radial-gradient( circle farthest-corner at 50.3% 44.5%,  rgba(116,147,179,1) 0%, rgba(62,83,104,1) 100.2% );
+    }
+  </style>
   <body style="padding-top: 80px;">
     <!-- Navbar -->
 
-    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top topthing">
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
 
       {% if request.user.is_authenticated %}
-        <img src="..." alt="..." class="img-thumbnail nav-item">
+        {% if request.user.profile.avatar %}
+          <img src="{{request.user.profile.avatar.url}}" alt="..." class="img-thumbnail nav-item">
+        {% endif %}
         <p class="font-italic text-light nav-item "  style="text-align: left">hello, {{request.user}}</p>
       {% endif %}
 
@@ -30,11 +37,15 @@
               <a class="nav-link" href="{%url 'core:home_page'%}">Home</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{%url 'core:upload'%}">upload</a>
+              <a class="nav-link" href="{%url 'core:upload'%}">Upload</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'accounts:logout' %}">My Account</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="{% url 'accounts:logout' %}">Sign out</a>
             </li>
+
         </ul>
         {% else %}
           <ul class="navbar-nav ml-auto" >

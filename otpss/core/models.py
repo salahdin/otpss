@@ -88,11 +88,10 @@ class Answer(models.Model):
         on_delete=models.CASCADE,
         related_name="questionAnswer",
     )
-
     Answercontent = models.TextField(
         verbose_name="content of question"
     )
-
+    AnswerImage = models.ImageField(blank=True,null=True,verbose_name="answer image")
     user = models.CharField(max_length=250)
     created = models.DateTimeField(auto_now_add=True, verbose_name="date created")
     votes = models.IntegerField(default=0)
@@ -131,4 +130,10 @@ class AssessmentImage(models.Model):
 
 
 class AssessmentFile(models.Model):
-    pass
+    assessment = models.ForeignKey(Assessment,
+                                   default=None,
+                                   on_delete=models.CASCADE,
+                                   related_name="assessmentdoc"
+                                   )
+
+    document = models.FileField(verbose_name="assessment in document format")

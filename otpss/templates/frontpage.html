@@ -44,28 +44,28 @@
 
     <div class="col-6">
       <div id="page1">
-      <h3>Don't have an account yet?</h3>
+        <h3>Don't have an account yet?</h3>
 
-      {% if signupform.non_field_errors %}
-        <div class="alert danger">
-          {{ signupform.non_field_errors }}
-        </div>
-      {% endif %}
+        {% if signupform.non_field_errors %}
+          <div class="alert danger">
+            {{ signupform.non_field_errors }}
+          </div>
+        {% endif %}
 
-      {% if signupform.errors %}
-        {% for field in signupform %}
-          {% for error in field.errors %}
+        {% if signupform.errors %}
+          {% for field in signupform %}
+            {% for error in field.errors %}
+              <div class="alert alert-danger">
+                <b>{{ error|escape }}</b>
+              </div>
+            {% endfor %}
+          {% endfor %}
+          {% for error in signupform.non_field_errors %}
             <div class="alert alert-danger">
               <b>{{ error|escape }}</b>
             </div>
           {% endfor %}
-        {% endfor %}
-        {% for error in signupform.non_field_errors %}
-          <div class="alert alert-danger">
-            <b>{{ error|escape }}</b>
-          </div>
-        {% endfor %}
-      {% endif %}
+        {% endif %}
 
       <form action="." method="POST">
         {% csrf_token %}
@@ -76,9 +76,10 @@
 
           </div>
         {% endfor %}
-        <button id= "hidebutton" class="btn btn-outline-secondary" onclick="myFunction()">next</button>
 
-        </div>
+      </div>
+
+
 
         <div id="page2" style="display: none">
           {% for field in profileform %}
@@ -87,10 +88,11 @@
           </div>
           {% endfor %}
         <input type="submit" value="Sign up" name="signupform" class="btn btn-primary">
+
         </div>
-
-
+        <br>
       </form>
+      <button id= "hidebutton" class="btn btn-outline-secondary" onclick="myFunction()">next</button>
 
   </div>
 
@@ -104,10 +106,12 @@
           if (x.style.display === "none") {
             x.style.display = "block";
             y.style.display = "none";
+            z.innerText = "next";
 
           } else {
             x.style.display = "none";
             y.style.display = "block";
+            z.innerText = "back";
           }
         }
     </script>

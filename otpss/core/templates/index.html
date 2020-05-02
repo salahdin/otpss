@@ -2,13 +2,20 @@
 {% load static %}
 
 {% block main %}
+<style>
+    .s004 {
+        background: rgb(105,156,218);
+        background: linear-gradient(169deg, rgba(105,156,218,1) 20%, rgba(198,153,201,1) 65%);
+    }
+
+</style>
 <link href="https://fonts.googleapis.com/css?family=Poppins:400,800" rel="stylesheet" />
 <link href="{%static 'css/main.css' %}" rel="stylesheet" />
 <link>
     <div class="s004">
       <form method="GET" action="{% url 'core:search' %}" >
         <fieldset>
-          <legend>WHAT ARE YOU LOOKING FOR?</legend>
+          <legend>idk what to say for now?</legend>
           <div class="inner-form">
 
               <div class="input-field">
@@ -24,6 +31,9 @@
         </fieldset>
       </form>
     </div>
+<br>
+<p>tranding papers</p>
+
 <div class="card-group">
     {%for i in popular_posts%}
       <div class="card">

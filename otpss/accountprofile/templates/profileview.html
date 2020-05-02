@@ -1,51 +1,30 @@
 {% extends 'templates/base.html' %}
 
 {% block main %}
-<link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
-<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-
 <div class="container">
     <div class="span3 well">
         <div style="text-align: center;">
-        <a href="#aboutModal" data-toggle="modal" data-target="#myModal"><img src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcRbezqZpEuwGSvitKy3wrwnth5kysKdRqBW54cAszm_wiutku3R" name="aboutme" width="140" height="140" class="img-circle"></a>
-        <h3>{{person.name}}</h3>
-        <em>click my face for more</em>
+            {% if person_profile.avatar %}
+                <a href="#aboutModal" data-toggle="modal" data-target="#myModal"><img src="{{person_profile.avatar.url}}" name="aboutme" width="140" height="140" class="img-circle"></a>
+            {%else%}
+               <a href="#aboutModal" data-toggle="modal" data-target="#myModal"><img src="https://icons.iconarchive.com/icons/papirus-team/papirus-status/512/avatar-default-icon.png" name="aboutme" width="140" height="140" class="img-circle"></a>
+            {% endif%}
+            <h3>{{person_profile.user}}</h3>
+            <em>{{person_profile.studentId}}</em>
 		</div>
-    </div>
-    <!-- Modal -->
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                    <h4 class="modal-title" id="myModalLabel">More About Joe</h4>
-                    </div>
-                <div class="modal-body">
-                    <center>
-                    <img src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcRbezqZpEuwGSvitKy3wrwnth5kysKdRqBW54cAszm_wiutku3R" name="aboutme" width="140" height="140" border="0" class="img-circle"></a>
-                    <h3 class="media-heading">{{person.name}}<small>{{person_profile.studentId}}</small></h3>
-                    <span><strong>Skills: </strong></span>
-                        <span class="label label-warning">HTML5/CSS</span>
-                        <span class="label label-info">Adobe CS 5.5</span>
-                        <span class="label label-info">Microsoft Office</span>
-                        <span class="label label-success">Windows XP, Vista, 7</span>
-                    </center>
-                    <hr>
-                    <center>
-                    <p class="text-left"><strong>Bio: </strong><br>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut sem dui, tempor sit amet commodo a, vulputate vel tellus.</p>
-                    <br>
-                    </center>
-                </div>
-                <div class="modal-footer">
-                    <center>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">I've heard enough about Joe</button>
-                    </center>
-                </div>
-            </div>
-        </div>
     </div>
 </div>
 
+    <div class="card-columns">
+    {% for i in person_profile.user.assessmentPost.all %}
+        <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">{{i.courseCode}}</h5>
+            <p class="card-text">hello</p>
+        </div>
+    </div>
+    {% endfor %}
+    {% if not person_profile.user.assessmentPost.all %}
+        no uploads
+    {%endif%}
 {% endblock %}

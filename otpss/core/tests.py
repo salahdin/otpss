@@ -3,7 +3,6 @@ from .models import *
 from faker import Faker
 from .forms import *
 from django.contrib.auth.models import User
-
 fake = Faker()
 
 

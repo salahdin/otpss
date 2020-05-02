@@ -1,11 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import User
 from . import finallist
-
+from .validators import validate_id
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
-    studentId = models.IntegerField(verbose_name="student id")
+    studentId = models.IntegerField(verbose_name="student id", validators=[validate_id])
     program = models.CharField(max_length=100,
                                verbose_name="program user registered for",
                                choices=finallist.programList

@@ -15,7 +15,6 @@ urlpatterns = [
     path('assessment/<int:pk>', views.AssessmentDetailView.as_view(), name="assessment_detail_view"),
     path('hitcount/', include(('hitcount.urls', 'hitcount'), namespace='hitcount')),
     path('tagged/<slug:slug>', views.taggedAssessemnt, name='tagged'),
-
     ]
 
 """if settings.DEBUG:

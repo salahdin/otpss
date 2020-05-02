@@ -9,8 +9,8 @@
         {% csrf_token %}
         {{ form|crispy }}
         {{ ImageForm|crispy }}
-        <div class="col-md-4">
-                <div id="imageholder"> </div>
+        <div class="col-md-6 card-img" style="float: right">
+                <div   id="imageholder"> </div>
         </div>
      <button type="submit" class="save btn btn-default">Save</button>
     </form>
@@ -18,6 +18,12 @@
 </div>
 
 <script>
+    function rotate(image) {
+        let rotateAngle = Number(image.getAttribute("rotangle")) + 90;
+        image.setAttribute("style", "transform: rotate(" + rotateAngle + "deg)");
+        image.setAttribute("rotangle", "" + rotateAngle);
+    }
+
   function handleFileSelect(evt) {
     var files = evt.target.files; // FileList object
 

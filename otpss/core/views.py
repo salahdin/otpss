@@ -20,6 +20,19 @@ def homepage(request):
     return render(request, "index.html", context)
 
 
+class HomePageView(TemplateView, HitCountDetailView):
+    template_name = "index.html"
+    context_object_name = 'popular_posts'
+
+    def get_context_data(self, **kwargs):
+        myassessment = self.object
+        context = super(HomePageView, self).get_context_data(**kwargs)
+        context.update({
+            'popular_posts': Assessment.objects.order_by('-hit_count_generic__hits')[:3],
+        })
+        return context
+
+
 class AssessmentSearchView(ListView):
     model = Assessment
     paginate_by = 5
@@ -38,48 +51,42 @@ class AssessmentSearchView(ListView):
             vectors = courseCode_vector + courseTitle_vector + assessmentContent_vector
             result = Assessment.objects.annotate(search=vectors).filter(search__icontains=keyword)
 
-            result = result.annotate(rank=SearchRank(vectors, query)).order_by('id','-rank').distinct('id')
+            result = result.annotate(rank=SearchRank(vectors, query)).order_by('id', '-rank').distinct('id')
             finalQueryset = sorted(result, key=operator.attrgetter('rank'), reverse=True)
 
             return finalQueryset[:100]
 
-
+# remove the if statment since the we're not sending a post request
 def upvote(request, id_):
     """
     after clicking the upvote button answer.votes is incremented (will be used for sorting results) and a new vote
     object is created :type id_: int
     """
     answer_ = get_object_or_404(Answer, pk=id_)
-    if not request.method == 'POST':
-        try:
-            UserVote.objects.create(user=request.user, answer=answer_, vote_type='U')
-            answer_.votes += 1
-            answer_.save()
-            print("works")
-        except:
-            print("error ")
-    else:
-        return redirect('core:upload')
-    return redirect('core:list')
+    try:
+        UserVote.objects.create(user=request.user, answer=answer_, vote_type='U')
+        answer_.votes += 1
+        answer_.save()
+        return redirect('core:view_answers', id=id_)
+
+    except:
+        return redirect('core:view_answers', id=id_)
 
 
 def downvote(request, id_):
     """
-    after clicking the downvote button answer.votes is incremented (will be used for sorting results) and a new vote
+    after clicking the down button answer.votes is decremented (will be used for sorting results) and a new vote
     object is created :type id_: int
     """
     answer_ = get_object_or_404(Answer, pk=id_)
-    if not request.method == 'POST':
-        try:
-            UserVote.objects.create(user=request.user, answer=answer_, vote_type='D')
-            answer_.votes = answer_.votes - 1
-            answer_.save()
-            print("works")
-        except:
-            print("error ")
-    else:
-        return redirect('core:upload')
-    return redirect('core:list')
+    try:
+        UserVote.objects.create(user=request.user, answer=answer_, vote_type='D')
+        answer_.votes -= 1
+        answer_.save()
+        return redirect('core:view_answers', id=id_)
+
+    except:
+        return redirect('core:view_answers', id=id_)
 
 @login_required
 def upload_paper(request):

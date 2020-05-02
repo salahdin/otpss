@@ -2,6 +2,13 @@
 {% load hitcount_tags %}
 
 {% block main %}
+<style>
+    .rotater {
+        transition: all 0.3s ease;
+        border: 0.0625em solid black;
+        border-radius: 0em;
+    }
+</style>
 
 <div class="container" style="display: flex">
 <div class="col-8">
@@ -9,15 +16,13 @@
         {% for simage in assessment.assessmentPic.all %}
             {% if simage.image%}
             <div class="card bg-dark text-white">
-              <img class="card-img" src="{{simage.image.url}}" alt="Card image">
+              <img class="card-img rotater" onclick="rotate(this)" src="{{simage.image.url}}" alt="Card image">
               <div class="card-img-overlay">
-
               </div>
             </div>
             {% endif %}
         {% endfor %}
     </div>
-
 
     <button id= "hidebutton" class="btn btn-outline-secondary" onclick="myFunction()">display image instead</button>
     <div class="card" id="core">
@@ -79,6 +84,11 @@
             y.style.display = "block";
             z.innerHTML = "display images instead";
           }
+        }
+        function rotate(image) {
+            let rotateAngle = Number(image.getAttribute("rotangle")) + 90;
+            image.setAttribute("style", "transform: rotate(" + rotateAngle + "deg)");
+            image.setAttribute("rotangle", "" + rotateAngle);
         }
     </script>
 </div>
