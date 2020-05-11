@@ -1,14 +1,13 @@
-from django.shortcuts import render, get_object_or_404, HttpResponseRedirect
-from django.forms import modelformset_factory
+from django.shortcuts import render, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from .forms import *
 from .models import *
 from django.views import generic
 from .convert import *
 from django.utils import timezone
-from django.shortcuts import get_object_or_404, redirect, render_to_response
+from django.shortcuts import get_object_or_404, redirect
 from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
-from django.views.generic import ListView,TemplateView
+from django.views.generic import ListView, TemplateView
 from .idquestion import splitParagraph
 from hitcount.views import HitCountDetailView
 from taggit.models import Tag
@@ -25,7 +24,7 @@ class HomePageView(TemplateView, HitCountDetailView):
     context_object_name = 'popular_posts'
 
     def get_context_data(self, **kwargs):
-        myassessment = self.object
+        my_assessment = self.object
         context = super(HomePageView, self).get_context_data(**kwargs)
         context.update({
             'popular_posts': Assessment.objects.order_by('-hit_count_generic__hits')[:3],
@@ -33,6 +32,7 @@ class HomePageView(TemplateView, HitCountDetailView):
         return context
 
 
+# class based view of the search tab
 class AssessmentSearchView(ListView):
     model = Assessment
     paginate_by = 5
@@ -52,11 +52,12 @@ class AssessmentSearchView(ListView):
             result = Assessment.objects.annotate(search=vectors).filter(search__icontains=keyword)
 
             result = result.annotate(rank=SearchRank(vectors, query)).order_by('id', '-rank').distinct('id')
-            finalQueryset = sorted(result, key=operator.attrgetter('rank'), reverse=True)
+            finalQueryset = sorted(result, key=operator.attrgetter('rank'), reverse=False)
 
             return finalQueryset[:100]
 
-# remove the if statment since the we're not sending a post request
+
+# remove the if statement since the we're not sending a post request
 def upvote(request, id_):
     """
     after clicking the upvote button answer.votes is incremented (will be used for sorting results) and a new vote
@@ -68,7 +69,6 @@ def upvote(request, id_):
         answer_.votes += 1
         answer_.save()
         return redirect('core:view_answers', id=id_)
-
     except:
         return redirect('core:view_answers', id=id_)
 
@@ -88,15 +88,16 @@ def downvote(request, id_):
     except:
         return redirect('core:view_answers', id=id_)
 
+
 @login_required
 def upload_paper(request):
+    common_tags = Assessment.tags.most_common()[:4]
     if request.user == None:
         return redirect('/')
-    common_tags = Assessment.tags.most_common()[:4]
     if request.method == 'POST':
         assessmentForm = AssessmentForm(request.POST)
         imageformset = ImageForm(request.POST, request.FILES)
-
+        documentForm = AssessmentFileForm(request.FILES)
         if assessmentForm.is_valid() and imageformset.is_valid():
             assessment_form = assessmentForm.save(commit=False)
             # change to upper case and remove white space
@@ -113,11 +114,22 @@ def upload_paper(request):
             for i in splitParagraph(text):
                 Question.objects.create(assessment=assessment_form, content=i, date=timezone.now())
 
+            if documentForm.is_valid():
+                pass
+
             return HttpResponseRedirect("")
     else:
         assessmentForm = AssessmentForm()
         imageformset = ImageForm()
-    return render(request, 'upload.html', {'form': assessmentForm, 'ImageForm': imageformset,'common_tags':common_tags})
+        documentForm = AssessmentFileForm()
+        context = {
+            'form': assessmentForm,
+            'documentForm': documentForm,
+            'ImageForm': imageformset,
+            'common_tags': common_tags
+        }
+
+    return render(request, 'upload.html', context)
 
 
 def viewAnswers(request, id_):
@@ -127,14 +139,19 @@ def viewAnswers(request, id_):
     if request.method == 'POST':
         answerForm = AnswerForm(request.POST)
         if answerForm.is_valid():
-            answer_form = answerForm.save(commit = False)
+            answer_form = answerForm.save(commit=False)
             answer_form.question = question
             answer_form.user = request.user
             answer_form.created = timezone.now()
             answer_form.save()
             return redirect('/')
     answerForm = AnswerForm()
-    return render(request, 'viewAnswers.html', {'question': question,'answerForm': answerForm})
+    context = {
+        'question': question,
+        'answerForm': answerForm
+    }
+
+    return render(request, 'viewAnswers.html', context)
 
 
 # i dont need this
@@ -161,6 +178,7 @@ class AssessmentDetailView(HitCountDetailView):
         return context
 
 
+#
 def taggedAssessemnt(request, slug):
     tag = get_object_or_404(Tag, slug=slug)
     assessments = Assessment.objects.filter(tags=tag)

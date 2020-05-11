@@ -34,6 +34,7 @@
             <div class="card">
                 <div class="card-body">
                     <p class="card-text">{{i.Answercontent}}</p>
+                    <img src="{{i.AnswerImage.url}}">
                     <p>Total Votes : {{i.votes}}</p>
                     <a href="{% url 'core:upvote' i.id%}" class="btn btn-primary">upvote</a>
                     <a href="{% url 'core:downvote' i.id%}" class="btn btn-primary">downvote</a>

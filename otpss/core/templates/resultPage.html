@@ -40,6 +40,7 @@
       <div class="card-body">
         <h5 class="card-title">{{assessment.courseTitle}}</h5>
         <p class="card-text">assessment data : {{assessment.assessmentDate}}</p>
+          <img src="https://d2pj2twnjx3fya.cloudfront.net/frontend-packages/viewer-container/eye_icon.svg">
           <span class="glyphicon glyphicon-eye-open"></span>  <p> Views : {% get_hit_count for assessment %}</p>
           <a href="{% url 'core:assessment_detail_view' assessment.id %}" class="btn btn-primary">view paper</a>
           <a href="{% url 'accounts:profileDetailView' assessment.user.id %}" class="btn btn-primary">{{assessment.user}}</a>

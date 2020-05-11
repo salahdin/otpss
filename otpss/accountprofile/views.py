@@ -25,6 +25,9 @@ def logout_view(request):
 
 
 def frontpage(request):
+    # redirect user to main page if authenticated
+    if request.user.is_authenticated():
+        return redirect('core:home_page')
     profileform = UserProfileForm()
     if request.method == 'POST':
         if 'signupform' in request.POST:
@@ -40,7 +43,7 @@ def frontpage(request):
                 profile = profileform.save(commit=False)
                 profile.user = user
                 profile.save()
-                # remember to log the user in
+                # log the user in
                 login(request, user)
                 return redirect('core:home_page')
         else:

@@ -91,7 +91,7 @@ class Answer(models.Model):
     Answercontent = models.TextField(
         verbose_name="content of question"
     )
-    AnswerImage = models.ImageField(blank=True,null=True,verbose_name="answer image")
+    AnswerImage = models.ImageField(blank=True, null=True, upload_to="answerImage/", verbose_name="answer image")
     user = models.CharField(max_length=250)
     created = models.DateTimeField(auto_now_add=True, verbose_name="date created")
     votes = models.IntegerField(default=0)
@@ -136,4 +136,4 @@ class AssessmentFile(models.Model):
                                    related_name="assessmentdoc"
                                    )
 
-    document = models.FileField(verbose_name="assessment in document format")
+    document = models.FileField(verbose_name="assessment in document format", null=True)
