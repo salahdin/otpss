@@ -28,10 +28,10 @@
  python manage.py runserver
  ```
  on browser go to http://127.0.0.1:8000/
- ```
+ 
  if user wants to create a superuser account(admin)
- run
- ```
+ run the following command
+
  ```shell
  python manage.py createsuperuser
  ```
