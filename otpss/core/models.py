@@ -6,6 +6,7 @@ from .imagePreProcessing import preProcessImage
 from hitcount.models import HitCountMixin, HitCount
 from django.contrib.contenttypes.fields import GenericRelation
 from taggit.managers import TaggableManager
+from django.core.validators import MinValueValidator
 
 
 class Assessment(models.Model):
@@ -71,11 +72,6 @@ class Question(models.Model):
         blank=True,
         verbose_name="content of the question"
     )
-    date = models.DateTimeField(
-        null=False,
-        blank=False,
-
-    )
 
     def questionSnippet(self):
         return self.content[:25]
@@ -94,7 +90,7 @@ class Answer(models.Model):
     AnswerImage = models.ImageField(blank=True, null=True, upload_to="answerImage/", verbose_name="answer image")
     user = models.CharField(max_length=250)
     created = models.DateTimeField(auto_now_add=True, verbose_name="date created")
-    votes = models.IntegerField(default=0)
+    votes = models.IntegerField(default=0, validators=[MinValueValidator(0)])
 
 
 voteType = [

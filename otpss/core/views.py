@@ -1,18 +1,19 @@
 from django.shortcuts import render, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from .forms import *
+from django.urls import NoReverseMatch
 from .models import *
 from django.views import generic
 from .convert import *
 from django.utils import timezone
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect,reverse
 from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
 from django.views.generic import ListView, TemplateView
 from .idquestion import splitParagraph
 from hitcount.views import HitCountDetailView
 from taggit.models import Tag
 import operator
-
+from django.db import IntegrityError
 
 def homepage(request):
     context = {'popular_posts': Assessment.objects.order_by('courseCode')[:3]}
@@ -65,12 +66,12 @@ def upvote(request, id_):
     """
     answer_ = get_object_or_404(Answer, pk=id_)
     try:
-        UserVote.objects.create(user=request.user, answer=answer_, vote_type='U')
+        UserVote.objects.get_or_create(user=request.user, answer=answer_, vote_type='U')
         answer_.votes += 1
         answer_.save()
-        return redirect('core:view_answers', id=id_)
     except:
-        return redirect('core:view_answers', id=id_)
+        pass
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
 def downvote(request, id_):
@@ -83,21 +84,23 @@ def downvote(request, id_):
         UserVote.objects.create(user=request.user, answer=answer_, vote_type='D')
         answer_.votes -= 1
         answer_.save()
-        return redirect('core:view_answers', id=id_)
-
     except:
-        return redirect('core:view_answers', id=id_)
+        pass
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
 @login_required
 def upload_paper(request):
     common_tags = Assessment.tags.most_common()[:4]
+    # if user is not logged in redirect to landing page
     if request.user == None:
         return redirect('/')
+
     if request.method == 'POST':
         assessmentForm = AssessmentForm(request.POST)
         imageformset = ImageForm(request.POST, request.FILES)
         documentForm = AssessmentFileForm(request.FILES)
+
         if assessmentForm.is_valid() and imageformset.is_valid():
             assessment_form = assessmentForm.save(commit=False)
             # change to upper case and remove white space
@@ -106,36 +109,40 @@ def upload_paper(request):
             assessment_form.user = request.user
             assessment_form.save()
             assessmentForm.save_m2m()
+
+            # using ocr to convert multiple images to text
             text = ""
             for image in request.FILES.getlist('image'):
                 photo = AssessmentImage(assessment=assessment_form, image=image)
                 text += convert_img_to_txt(image)
                 photo.save()
+
+            # create question objects
             for i in splitParagraph(text):
                 Question.objects.create(assessment=assessment_form, content=i, date=timezone.now())
 
             if documentForm.is_valid():
                 pass
 
-            return HttpResponseRedirect("")
+            return HttpResponseRedirect("/")
     else:
         assessmentForm = AssessmentForm()
         imageformset = ImageForm()
         documentForm = AssessmentFileForm()
-        context = {
-            'form': assessmentForm,
-            'documentForm': documentForm,
-            'ImageForm': imageformset,
-            'common_tags': common_tags
-        }
+    context = {
+        'form': assessmentForm,
+        'documentForm': documentForm,
+        'ImageForm': imageformset,
+        'common_tags': common_tags
+    }
 
     return render(request, 'upload.html', context)
 
 
 def viewAnswers(request, id_):
     question = get_object_or_404(Question, id=id_)
-    lst = question.questionAnswer.all()
-
+    answers = question.questionAnswer.all().order_by('-votes')
+    print(answers)
     if request.method == 'POST':
         answerForm = AnswerForm(request.POST)
         if answerForm.is_valid():
@@ -144,11 +151,12 @@ def viewAnswers(request, id_):
             answer_form.user = request.user
             answer_form.created = timezone.now()
             answer_form.save()
-            return redirect('/')
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     answerForm = AnswerForm()
     context = {
         'question': question,
-        'answerForm': answerForm
+        'answerForm': answerForm,
+        'answers': answers
     }
 
     return render(request, 'viewAnswers.html', context)
@@ -178,7 +186,6 @@ class AssessmentDetailView(HitCountDetailView):
         return context
 
 
-#
 def taggedAssessemnt(request, slug):
     tag = get_object_or_404(Tag, slug=slug)
     assessments = Assessment.objects.filter(tags=tag)

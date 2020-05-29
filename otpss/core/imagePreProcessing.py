@@ -6,10 +6,9 @@ from django.core.files import File
 from io import BytesIO
 
 
-def preProcessImage(image,degree):
+def preProcessImage(image):
     # converting PIL image to cv2 format
     im = Image.open(image)
-    im.rotate(degree)
     im.convert('RGB')
 
     # binarizing image

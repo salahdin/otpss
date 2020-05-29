@@ -25,30 +25,30 @@
 <div class="col-md-8">
     <div class="card">
         <div class="card-body">
-            <p class="card-text">{{question.content}}</p>
+            <h5 class="card-text">{{question.content}}</h5>
         </div>
     </div>
 <br><br>
 
-        {% for i in question.questionAnswer.all %}
+        {% for i in answers %}
             <div class="card">
                 <div class="card-body">
                     <p class="card-text">{{i.Answercontent}}</p>
-                    <img src="{{i.AnswerImage.url}}">
+                    {% if i.AnswerImage %}
+                        <img src="{{i.AnswerImage.url}}">
+                    {% endif %}
                     <p>Total Votes : {{i.votes}}</p>
-                    <a href="{% url 'core:upvote' i.id%}" class="btn btn-primary">upvote</a>
-                    <a href="{% url 'core:downvote' i.id%}" class="btn btn-primary">downvote</a>
-                    <div class="card col-3 bg-light" style="float: right">
+                    <a href="{% url 'core:upvote' i.id%}" class="btn btn-success">upvote</a>
+                    <a href="{% url 'core:downvote' i.id%}" class="btn btn-danger">downvote</a>
+                    <div class="" style="float: right">
                         <div class="card-body">
-
                             <p style="text-align: right" class="card-text"><small class="text-muted">Answered by : {{i.user}}</small></p>
                             <p style="text-align: right" class="card-text"><small class="text-muted">Answered on : {{i.created|date:'d-M-Y'}}</small></p>
                         </div>
                     </div>
                 </div>
-
             </div>
-
+    <br>
         {%endfor%}
 </div>
 

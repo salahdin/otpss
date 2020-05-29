@@ -32,15 +32,15 @@
       </form>
     </div>
 <br>
-<p>tranding papers</p>
+<p>trending papers</p>
 
 <div class="card-group">
     {%for i in popular_posts%}
       <div class="card">
           <div class="card-body">
-              <h5 class="card-title">{{i.courseCode}}</h5>
+              <h5 class="card-title"><a href="{% url 'core:assessment_detail_view' i.id %}"> {{i.courseCode}}</a></h5>
               <p class="card-text">{{i.courseTitle}}</p>
-              <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+              <p class="card-text"><small class="text-muted">uploaded {{i.uploadDate}}</small></p>
           </div>
       </div>
     {%endfor%}
@@ -54,7 +54,7 @@
       });
 
     </script>
-  </body><!-- This templates was made by Colorlib (https://colorlib.com) -->
+  </body>
 </html>
 
 {% endblock %}

@@ -20,7 +20,13 @@
         <div class="card">
         <div class="card-body">
             <h5 class="card-title">{{i.courseCode}}</h5>
-            <p class="card-text">hello</p>
+            <p class="card-text">{{i.courseTitle}}</p>
+
+            <img style="float: right" src="https://d2pj2twnjx3fya.cloudfront.net/frontend-packages/viewer-container/eye_icon.svg">
+            <p class="card-text">{{i.assessmentDate}}</p>
+            {% for tag in i.tags.all %}
+                <a href="{% url 'core:tagged' tag.slug %}" class="mr-1 badge badge-info">#{{ tag }}</a>
+            {% endfor %}
         </div>
     </div>
     {% endfor %}
