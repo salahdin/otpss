@@ -20,7 +20,7 @@
      }
  }
  ```
- next
+ to run the server run the following commands
  ```shell
  cd optss
  python manage.py makemigrations
