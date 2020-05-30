@@ -8,6 +8,8 @@
 - Sort test papers and answers based on the number of votes
 
 ### installation
+- clone or download the repository
+- to install all dependencies run
   ```shell
    pip install requirments.txt
   ```
