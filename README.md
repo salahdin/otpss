@@ -9,11 +9,12 @@
 
 ### installation
 - clone or download the repository
+- download and install teseract ocr engine 
 - to install all dependencies run
   ```shell
    pip install requirments.txt
   ```
- change databases in setting to or install postgres db
+ install postgres dbms or change the databases attribute in the settings file to run with sqlite3
  ```python
  DATABASES = {
      'default': {
