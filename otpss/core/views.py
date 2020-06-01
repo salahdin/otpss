@@ -1,7 +1,6 @@
 from django.shortcuts import render, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from .forms import *
-from django.urls import NoReverseMatch
 from .models import *
 from django.views import generic
 from .convert import *
@@ -13,7 +12,8 @@ from .idquestion import splitParagraph
 from hitcount.views import HitCountDetailView
 from taggit.models import Tag
 import operator
-from django.db import IntegrityError
+from django.contrib import messages
+
 
 def homepage(request):
     context = {'popular_posts': Assessment.objects.order_by('courseCode')[:3]}
@@ -52,7 +52,9 @@ class AssessmentSearchView(ListView):
             vectors = courseCode_vector + courseTitle_vector + assessmentContent_vector
             result = Assessment.objects.annotate(search=vectors).filter(search__icontains=keyword)
 
+            # return a distinct queryset by ordering by id
             result = result.annotate(rank=SearchRank(vectors, query)).order_by('id', '-rank').distinct('id')
+            # sort again using rank
             finalQueryset = sorted(result, key=operator.attrgetter('rank'), reverse=False)
 
             return finalQueryset[:100]
@@ -119,11 +121,11 @@ def upload_paper(request):
 
             # create question objects
             for i in splitParagraph(text):
-                Question.objects.create(assessment=assessment_form, content=i, date=timezone.now())
+                Question.objects.create(assessment=assessment_form, content=i)
 
             if documentForm.is_valid():
                 pass
-
+            messages.success(request, 'successfully uploaded!')
             return HttpResponseRedirect("/")
     else:
         assessmentForm = AssessmentForm()
@@ -140,17 +142,20 @@ def upload_paper(request):
 
 
 def viewAnswers(request, id_):
+    # get question
     question = get_object_or_404(Question, id=id_)
+    # get all answers associated with question ordered by the number of votes
     answers = question.questionAnswer.all().order_by('-votes')
-    print(answers)
     if request.method == 'POST':
         answerForm = AnswerForm(request.POST)
         if answerForm.is_valid():
+            # create answer object
             answer_form = answerForm.save(commit=False)
             answer_form.question = question
             answer_form.user = request.user
             answer_form.created = timezone.now()
             answer_form.save()
+            messages.success(request, 'question answered')
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     answerForm = AnswerForm()
     context = {
@@ -158,7 +163,6 @@ def viewAnswers(request, id_):
         'answerForm': answerForm,
         'answers': answers
     }
-
     return render(request, 'viewAnswers.html', context)
 
 

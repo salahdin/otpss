@@ -13,7 +13,7 @@ class AssessmentAdmin(admin.ModelAdmin):
 
 
 class QuestionAdmin(admin.ModelAdmin):
-    list_display = ('assessment', 'questionSnippet', 'date')
+    list_display = ('assessment', 'questionSnippet')
     search_fields = ['content']
 
 

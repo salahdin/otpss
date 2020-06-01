@@ -39,35 +39,32 @@
               <img style="float: right" src="https://d2pj2twnjx3fya.cloudfront.net/frontend-packages/viewer-container/eye_icon.svg">
           </div>
         </div>
-    </div>
 
 
 <br><br><br>
-            {% for i in assessment.assessmentQuestion.all %}
+        {% for i in assessment.assessmentQuestion.all %}
             <div class="card">
             <div class="card-body">
                 <p class="card-text">{{i.content}}</p>
                 <a href="{%url 'core:view_answers' i.id %}" class=" stretched-link">view answers</a>
             </div>
             </div>
-            {%endfor%}
+        {%endfor%}
+    </div>
 </div>
 
-
-        <div class="col-4" >
-            <h5>similar assessments</h5>
-            <div class="card">
-            {% for i in similar_objects %}
-                <a href="{% url 'core:assessment_detail_view' i.id %}" ><p class="card-header">{{i.courseCode}} from {{i.assessmentDate}}</p></a>
-                <div class="card-body">
-                    <h5 class="card-title">{{i.courseTitle}}</h5>
-                    <p>{{i.courseCode}}</p>
-
-                </div>
-            {%endfor%}
-            </div>
-
+<div class="col-4" >
+    <h5>similar assessments</h5>
+    <div class="card">
+    {% for i in similar_objects %}
+        <a href="{% url 'core:assessment_detail_view' i.id %}" ><p class="card-header">{{i.courseCode}} from {{i.assessmentDate}}</p></a>
+        <div class="card-body">
+            <h5 class="card-title">{{i.courseTitle}}</h5>
+            <p>{{i.courseCode}}</p>
         </div>
+    {%endfor%}
+    </div>
+</div>
     <script>
         function myFunction() {
           var x = document.getElementById("Images");
