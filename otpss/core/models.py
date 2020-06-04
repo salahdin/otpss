@@ -1,12 +1,13 @@
-from django.db import models
 from django.contrib.auth.models import User
-from django.utils import timezone
-from .validators import *
-from .imagePreProcessing import preProcessImage
-from hitcount.models import HitCountMixin, HitCount
 from django.contrib.contenttypes.fields import GenericRelation
-from taggit.managers import TaggableManager
 from django.core.validators import MinValueValidator
+from django.db import models
+from django.utils import timezone
+from hitcount.models import HitCount
+from taggit.managers import TaggableManager
+
+from .imagePreProcessing import preProcessImage
+from .validators import *
 
 
 class Assessment(models.Model):

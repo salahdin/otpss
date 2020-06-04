@@ -1,5 +1,5 @@
 from django import forms
-from .models import Assessment, AssessmentImage,Answer,AssessmentFile
+from .models import Assessment, AssessmentImage, Answer, AssessmentFile
 
 
 class DateInput(forms.DateInput):

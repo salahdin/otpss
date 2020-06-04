@@ -1,6 +1,5 @@
-from django.shortcuts import render, redirect,get_object_or_404
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.contrib.auth import login, logout,authenticate
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth import login, logout, authenticate
 from . forms import *
 from .models import UserProfile
 from django.contrib.auth.models import User
@@ -58,7 +57,11 @@ def frontpage(request):
         signinform = SignInForm()
         profileform = UserProfileForm()
 
-    return render(request, 'frontpage.html', {'signupform': signupform, 'signinform': signinform, 'profileform':profileform })
+    context = {'signupform': signupform,
+               'signinform': signinform,
+               'profileform': profileform
+               }
+    return render(request, 'frontpage.html', context)
 
 
 def profileDetailView(request, id_):

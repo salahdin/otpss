@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from . import finallist
+from . import ListofPrograms
 from .validators import validate_id
 
 class UserProfile(models.Model):
@@ -8,7 +8,7 @@ class UserProfile(models.Model):
     studentId = models.IntegerField(verbose_name="student id", validators=[validate_id])
     program = models.CharField(max_length=100,
                                verbose_name="program user registered for",
-                               choices=finallist.programList
+                               choices=ListofPrograms.programList
                                )
     avatar = models.ImageField(verbose_name="user avatar", upload_to='profile/', null=True)
 

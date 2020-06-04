@@ -1,21 +1,28 @@
-from django.shortcuts import render, HttpResponseRedirect
+import operator
+
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from .forms import *
-from .models import *
-from django.views import generic
-from .convert import *
-from django.utils import timezone
-from django.shortcuts import get_object_or_404, redirect,reverse
 from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
+from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import render, HttpResponseRedirect
+from django.utils import timezone
+from django.views import generic
 from django.views.generic import ListView, TemplateView
-from .idquestion import splitParagraph
 from hitcount.views import HitCountDetailView
 from taggit.models import Tag
-import operator
-from django.contrib import messages
+
+from .convert import *
+from .forms import *
+from .idquestion import findQuestions
+from .models import *
 
 
 def homepage(request):
+    """
+    :function: direct users to landing page
+    :param request:
+    :return:
+    """
     context = {'popular_posts': Assessment.objects.order_by('courseCode')[:3]}
     return render(request, "index.html", context)
 
@@ -60,7 +67,6 @@ class AssessmentSearchView(ListView):
             return finalQueryset[:100]
 
 
-# remove the if statement since the we're not sending a post request
 def upvote(request, id_):
     """
     after clicking the upvote button answer.votes is incremented (will be used for sorting results) and a new vote
@@ -99,6 +105,7 @@ def upload_paper(request):
         return redirect('/')
 
     if request.method == 'POST':
+        # make form instances with user post request as arguments
         assessmentForm = AssessmentForm(request.POST)
         imageformset = ImageForm(request.POST, request.FILES)
         documentForm = AssessmentFileForm(request.FILES)
@@ -120,7 +127,7 @@ def upload_paper(request):
                 photo.save()
 
             # create question objects
-            for i in splitParagraph(text):
+            for i in findQuestions(text):
                 Question.objects.create(assessment=assessment_form, content=i)
 
             if documentForm.is_valid():
@@ -142,6 +149,11 @@ def upload_paper(request):
 
 
 def viewAnswers(request, id_):
+    """
+    :param request:
+    :param id_:
+    :return: python dict of objects with class name as key
+    """
     # get question
     question = get_object_or_404(Question, id=id_)
     # get all answers associated with question ordered by the number of votes
@@ -166,14 +178,6 @@ def viewAnswers(request, id_):
     return render(request, 'viewAnswers.html', context)
 
 
-# i dont need this
-class AssessmentListView(generic.ListView):
-    model = Assessment
-    context_object_name = 'assessments'
-    paginate_by = 5
-    template_name = 'list_view.html'
-
-
 class AssessmentDetailView(HitCountDetailView):
     model = Assessment
     template_name = 'assessmentDetailView.html'
@@ -191,6 +195,12 @@ class AssessmentDetailView(HitCountDetailView):
 
 
 def taggedAssessemnt(request, slug):
+    """
+    :function returns assessment objects that are related to the tag
+    :param request:
+    :param slug:
+    :return: assessment objects
+    """
     tag = get_object_or_404(Tag, slug=slug)
     assessments = Assessment.objects.filter(tags=tag)
 
