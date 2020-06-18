@@ -1,3 +1,5 @@
+import logging
+
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.fields import GenericRelation
 from django.core.validators import MinValueValidator
@@ -8,6 +10,9 @@ from taggit.managers import TaggableManager
 
 from .imagePreProcessing import preProcessImage
 from .validators import *
+
+# instance of a logger
+logger = logging.getLogger(__name__)
 
 
 class Assessment(models.Model):
@@ -122,8 +127,11 @@ class AssessmentImage(models.Model):
     image = models.ImageField(verbose_name='Image', upload_to='elements/')
 
     def save(self, *args, **kwargs):
-        self.image = preProcessImage(self.image)
-        super().save(*args, **kwargs)
+        try:
+            self.image = preProcessImage(self.image)
+            super().save(*args, **kwargs)
+        except:
+            logger.exception('Unable save image!')
 
 
 class AssessmentFile(models.Model):

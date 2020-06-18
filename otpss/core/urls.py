@@ -7,7 +7,6 @@ app_name = 'core'
 urlpatterns = [
     path('', views.homepage, name="home_page"),
     path('search/', views.AssessmentSearchView.as_view(), name="search"),
-    path('list/', views.AssessmentListView.as_view(), name='list'),
     path('answer/<int:id_>', views.viewAnswers, name='view_answers'),
     path('upload/', views.upload_paper, name="upload"),
     path('upvote/<int:id_>', views.upvote, name="upvote"),

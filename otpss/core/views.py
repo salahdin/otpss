@@ -7,7 +7,7 @@ from django.shortcuts import get_object_or_404, redirect
 from django.shortcuts import render, HttpResponseRedirect
 from django.utils import timezone
 from django.views import generic
-from django.views.generic import ListView, TemplateView
+from django.views.generic import ListView, DetailView
 from hitcount.views import HitCountDetailView
 from taggit.models import Tag
 
@@ -23,21 +23,8 @@ def homepage(request):
     :param request:
     :return:
     """
-    context = {'popular_posts': Assessment.objects.order_by('courseCode')[:3]}
+    context = {'popular_posts': Assessment.objects.all().order_by('uploadDate')[:3]}
     return render(request, "index.html", context)
-
-
-class HomePageView(TemplateView, HitCountDetailView):
-    template_name = "index.html"
-    context_object_name = 'popular_posts'
-
-    def get_context_data(self, **kwargs):
-        my_assessment = self.object
-        context = super(HomePageView, self).get_context_data(**kwargs)
-        context.update({
-            'popular_posts': Assessment.objects.order_by('-hit_count_generic__hits')[:3],
-        })
-        return context
 
 
 # class based view of the search tab
@@ -66,7 +53,7 @@ class AssessmentSearchView(ListView):
 
             return finalQueryset[:100]
 
-
+@login_required(login_url='/')
 def upvote(request, id_):
     """
     after clicking the upvote button answer.votes is incremented (will be used for sorting results) and a new vote
@@ -81,7 +68,7 @@ def upvote(request, id_):
         pass
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-
+@login_required(login_url='/')
 def downvote(request, id_):
     """
     after clicking the down button answer.votes is decremented (will be used for sorting results) and a new vote
@@ -97,7 +84,7 @@ def downvote(request, id_):
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
-@login_required
+@login_required(login_url='/')
 def upload_paper(request):
     common_tags = Assessment.tags.most_common()[:4]
     # if user is not logged in redirect to landing page

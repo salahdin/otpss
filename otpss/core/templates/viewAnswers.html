@@ -51,7 +51,7 @@
     <br>
         {%endfor%}
 </div>
-
+    {% if request.user %}
 <div class="col-md-6">
     <p class="card-text"><small class="text-muted">provide answer for the question</small></p>
     <div class="userAnswer">
@@ -62,4 +62,5 @@
         </form>
     </div>
 </div>
+    {% endif %}
 {%endblock%}

@@ -45,13 +45,16 @@
         {% for i in assessment.assessmentQuestion.all %}
             <div class="card">
             <div class="card-body">
-                <p class="card-text">{{i.content}}</p>
-                <a href="{%url 'core:view_answers' i.id %}" class=" stretched-link">view answers</a>
+                <a style="text-decoration: none" href="{%url 'core:view_answers' i.id %}" class="card-block stretched-link text-decoration-none">
+                <p class="card-text text-dark">{{i.content}}</p>
+                </a>
             </div>
             </div>
         {%endfor%}
     </div>
 </div>
+
+
 
 <div class="col-4" >
     <h5>similar assessments</h5>

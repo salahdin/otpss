@@ -32,13 +32,12 @@
       </form>
     </div>
 <br>
-<p>trending papers</p>
-
-<div class="card-group">
+<p>latest papers</p>
+<div class="card-deck">
     {%for i in popular_posts%}
       <div class="card">
-          <div class="card-body">
-              <h5 class="card-title"><a href="{% url 'core:assessment_detail_view' i.id %}"> {{i.courseCode}}></h5>
+          <div class="card-body stretched-link ">
+              <h5 class="card-title stretched-link" style="transform: rotate(0);"><a href="{% url 'core:assessment_detail_view' i.id %}"> {{i.courseCode}} </a> </h5>
               <p class="card-text">{{i.courseTitle}}</p>
               <p class="card-text"><small class="text-muted">uploaded {{i.uploadDate}}</small></p>
           </div>
