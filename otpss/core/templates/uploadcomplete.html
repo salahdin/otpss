@@ -1,0 +1,19 @@
+{% extends 'templates/base.html' %}
+
+{% block main %}
+
+    <div class="jumbotron text-center">
+      <h1 class="display-3">Thank You!</h1>
+      <p class="lead"><strong>The file has been uploaded successfully</strong></p>
+      <hr>
+        {{ assessment.courseCode }}
+        {{ assessment.courseTitle }}
+    <br>
+      {% for tag in assessment.tags.all %}
+                <a href="{% url 'core:tagged' tag.slug %}" class="mr-1 badge badge-info">#{{ tag }}</a>
+      {% endfor %}
+      <p>
+        go to assessment? <a href="{% url 'core:assessment_detail_view' assessment.id%}">here</a>
+      </p>
+    </div>
+{% endblock %}

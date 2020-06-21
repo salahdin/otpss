@@ -1,7 +1,6 @@
-from django.urls import path,include
+from django.urls import path, include
 from . import views
-from django.conf import settings
-from django.conf.urls.static import static
+
 
 app_name = 'core'
 urlpatterns = [
@@ -14,8 +13,5 @@ urlpatterns = [
     path('assessment/<int:pk>', views.AssessmentDetailView.as_view(), name="assessment_detail_view"),
     path('hitcount/', include(('hitcount.urls', 'hitcount'), namespace='hitcount')),
     path('tagged/<slug:slug>', views.taggedAssessemnt, name='tagged'),
+    path('manualQuestion/<int:id_>', views.saveQuestions, name='MsaveQ'),
     ]
-
-"""if settings.DEBUG:
-    #urlpatterns= urlpatterns + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-    urlpatterns= urlpatterns + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)"""

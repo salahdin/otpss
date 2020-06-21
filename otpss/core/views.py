@@ -13,7 +13,7 @@ from taggit.models import Tag
 
 from .convert import *
 from .forms import *
-from .idquestion import findQuestions
+from .idquestion import findQuestions,splitByline
 from .models import *
 
 
@@ -23,7 +23,7 @@ def homepage(request):
     :param request:
     :return:
     """
-    context = {'popular_posts': Assessment.objects.all().order_by('uploadDate')[:3]}
+    context = {'popular_posts': Assessment.objects.order_by('-uploadDate',)[:3]}
     return render(request, "index.html", context)
 
 
@@ -113,14 +113,10 @@ def upload_paper(request):
                 text += convert_img_to_txt(image)
                 photo.save()
 
-            # create question objects
-            for i in findQuestions(text):
-                Question.objects.create(assessment=assessment_form, content=i)
-
             if documentForm.is_valid():
                 pass
             messages.success(request, 'successfully uploaded!')
-            return HttpResponseRedirect("/")
+            return render(request, 'uploadedit.html', {'assessment': assessment_form, 'fulltext': text, 'questions': findQuestions(text)})
     else:
         assessmentForm = AssessmentForm()
         imageformset = ImageForm()
@@ -133,6 +129,23 @@ def upload_paper(request):
     }
 
     return render(request, 'upload.html', context)
+
+
+def saveQuestions(request, id_):
+    assessment_ = get_object_or_404(Assessment, id=id_)
+    if request.method == 'GET':
+        content = request.GET['full-content']
+        if 'Approve' in request.GET:
+            for i in splitByline(content):
+                Question.objects.create(assessment=assessment_, content=i)
+            return render(request, "uploadcomplete.html", {'assessment': assessment_})
+
+        elif 'Skip' in request.GET:
+            for i in findQuestions(content):
+                Question.objects.create(assessment=assessment_, content=i)
+            return render(request, "uploadcomplete.html", {'assessment': assessment_})
+
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
 def viewAnswers(request, id_):

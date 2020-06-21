@@ -1,0 +1,70 @@
+{% extends 'templates/base.html' %}
+
+{% block main %}
+    <!--
+    <div class="lines">
+        <form method="get">
+        <table class="table">
+        <tr>
+            <th>question label</th>
+            <th>question string</th>
+            <th>question content</th>
+        </tr>
+            {% for i in lines %}
+                <tr>
+                <td>
+                    <input type="checkbox" id="label" name="label" value="{{ i }}">
+                </td>
+                <td>
+                    <input type="checkbox" id="line" name="line" value="{{ i }}">
+                </td>
+                    <td>
+                        <label for="line{{ forloop.counter }}"> {{ i }}</label>
+                    </td>
+                </tr>
+            {% endfor %}
+
+        </table>
+        <input type="submit" value="submit">
+        </form>
+
+    </div>
+    -->
+<button id= "hidebutton" class="btn btn-outline-secondary" onclick="myFunction()">automatic detection</button>
+    <div class="edit-textarea form-group" id="manual">
+    <p class="text-info">add ">>>" at the end of a question to indicate where the question is finished</p>
+    <form method="get" action="{% url 'core:MsaveQ' assessment.id %}">
+        <textarea id="full-content" class="form-control" name="full-content" rows="25" cols="50">
+            {{ fulltext }}
+        </textarea>
+    <input type="submit" name="Approve" class="btn btn-outline-success" value="Approve">
+    <input type="submit" name="Skip" class="btn btn-outline-secondary" value="Skip">
+    </form>
+    </div>
+
+    <div class="automatic card-deck" id="automatic" style="display: none">
+        {% for i in questions %}
+            <div class="card">
+                <div class="card-body">
+                    <p>{{ i }}</p>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+<script>
+        function myFunction() {
+          var x = document.getElementById("automatic");
+          var y = document.getElementById("manual");
+          var z = document.getElementById("hidebutton");
+          if (x.style.display === "none") {
+            x.style.display = "block";
+            y.style.display = "none";
+            z.innerHTML = "automatic";
+          } else {
+            x.style.display = "none";
+            y.style.display = "block";
+            z.innerHTML = "manually identify questions";
+          }
+        }
+</script>
+{% endblock %}
