@@ -44,19 +44,6 @@ class AssessmentTest(TestCase):
                 "content": fake.text(),
                 }
         test_question = Question.objects.create(**options)
-        self.assertTrue(isinstance(test_question,Question))
-
-    def test_Answer_invalid(self):
-        pass
-
-    def test_Answer_valid(self):
-        pass
+        self.assertTrue(isinstance(test_question, Question))
 
 
-class AnswerVoteTest(TestCase):
-    def setUp(self):
-        user = User.objects.create_user('foo', fake.email(), 'bar')
-        self.client.login(username='foo', password='bar')
-
-    def test_upvote_same_user(self):
-        pass

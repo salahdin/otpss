@@ -1,6 +1,6 @@
 from django import forms
 from .models import Assessment, AssessmentImage, Answer, AssessmentFile
-
+from taggit.forms import TagWidget
 
 class DateInput(forms.DateInput):
     input_type = 'date'
@@ -13,6 +13,7 @@ class AssessmentForm(forms.ModelForm):
         exclude = ('user', "uploadDate",)
         widgets = {
             'assessmentDate': DateInput(),
+            'tags': TagWidget(),
         }
 
 
