@@ -123,6 +123,7 @@ def upload_paper(request):
                 text += convert_img_to_txt(image)
                 photo.save()
             messages.success(request, 'successfully uploaded!')
+            print(text)
             return render(request, 'uploadedit.html', {'assessment': assessment_form, 'fulltext': text, 'questions': findQuestions(text)})
     else:
         assessmentForm = AssessmentForm()

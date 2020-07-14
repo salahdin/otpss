@@ -19,7 +19,7 @@
     {% for i in person_profile.user.assessmentPost.all %}
         <div class="card">
         <div class="card-body">
-            <h5 class="card-title">{{i.courseCode}}</h5>
+            <a href="{% url 'core:assessment_detail_view' i.id %}"> <h5 class="card-title">{{i.courseCode}}</h5></a>
             <p class="card-text">{{i.courseTitle}}</p>
 
             <img style="float: right" src="https://d2pj2twnjx3fya.cloudfront.net/frontend-packages/viewer-container/eye_icon.svg">

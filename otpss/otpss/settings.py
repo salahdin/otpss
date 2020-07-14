@@ -24,10 +24,9 @@ SECRET_KEY = '=c#0f*^36z5q=w$hsl=amw#-=a*2ssk^_gv2nezzzm-x9&e5z4'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.137.1', '127.0.0.1']
+ALLOWED_HOSTS = ['192.168.137.1', '0.0.0.0', '127.0.0.1']
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -44,6 +43,8 @@ INSTALLED_APPS = [
     'taggit',
     'jet_django',
     'taggit_autosuggest',
+    'adminlte3',
+    'adminlte3_theme',
 ]
 
 
@@ -129,7 +130,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
-STATIC_ROOT = ''
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 STATIC_URL = '/static/'
 
@@ -143,3 +144,4 @@ TAGGIT_CASE_INSENSITIVE = True
 
 JET_PROJECT = 'online_test_paper_and_solution_sharing_system'
 JET_TOKEN = 'cfd5e9c0-a00e-4996-b69d-7392e7fda4ea'
+

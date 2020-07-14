@@ -17,7 +17,7 @@
     .similar {
         display: none;
     }
-    .assessment{
+    .container{
         width: 100%;
     }
     .hidden{
@@ -32,7 +32,7 @@
 
 <div class="container" style="display: flex">
 
-<div class="col-8 assessment">
+<div class="assessment">
     <div class="hidden" id="Images" style="display: none">
         <p>click image to rotate</p>
         {% for simage in assessment.assessmentPic.all %}
