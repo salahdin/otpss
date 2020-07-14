@@ -25,9 +25,9 @@ class SignUpForm(UserCreationForm):
 
 
 class UserProfileForm(forms.ModelForm):
-    avatar = forms.ImageField(widget=forms.widgets.FileInput(attrs={'class': 'avatar avatar-24 img-circle','placeholder' : 'choose avatar'}))
+    avatar = forms.ImageField(widget=forms.widgets.FileInput(attrs={'class': 'avatar avatar-24 img-circle', 'placeholder' : 'choose avatar'}))
     studentId = forms.CharField(
-        widget=forms.widgets.TextInput(attrs={'placeholder': 'student id', 'class': 'form-control'}))
+        widget=forms.widgets.TextInput(attrs={'placeholder': 'student id','pattern': '^20[0-9]{7}', 'class': 'form-control'}))
     program = forms.ChoiceField(label='program', widget=forms.Select(attrs={'class': 'form-control'}), choices=programList)
 
     class Meta:

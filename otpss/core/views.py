@@ -1,19 +1,21 @@
 import operator
+import os
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
 from django.shortcuts import get_object_or_404, redirect
 from django.shortcuts import render, HttpResponseRedirect
-from django.utils import timezone
-from django.views import generic
+
+
+from taggit.models import Tag
 from django.views.generic import ListView, DetailView
 from hitcount.views import HitCountDetailView
 from taggit.models import Tag
 
 from .convert import *
 from .forms import *
-from .idquestion import findQuestions,splitByline
+from .idquestion import findQuestions, splitByline
 from .models import *
 
 
@@ -23,7 +25,7 @@ def homepage(request):
     :param request:
     :return:
     """
-    context = {'popular_posts': Assessment.objects.order_by('-uploadDate',)[:3]}
+    context = {'popular_posts': Assessment.objects.order_by('-uploadDate',)[:3], 'date_filter': AssessmentForm}
     return render(request, "index.html", context)
 
 
@@ -36,22 +38,26 @@ class AssessmentSearchView(ListView):
 
     def get_queryset(self):
         keyword = self.request.GET.get('keyword')
-        keyword = keyword.replace(',', " ")
+        date = self.request.GET.get('assessmentDate')
+        keyword = keyword.replace(',', " ").rstrip()
         print(keyword)
         if keyword:
             query = SearchQuery(keyword)
             courseCode_vector = SearchVector('courseCode', weight='A')
             courseTitle_vector = SearchVector('courseTitle', weight='B')
             assessmentContent_vector = SearchVector('assessmentQuestion__content', weight='C')
-            vectors = courseCode_vector + courseTitle_vector + assessmentContent_vector
+            description_vector = SearchVector('description', weight='D')
+            vectors = courseCode_vector + courseTitle_vector + assessmentContent_vector + description_vector
             result = Assessment.objects.annotate(search=vectors).filter(search__icontains=keyword)
 
             # return a distinct queryset by ordering by id
             result = result.annotate(rank=SearchRank(vectors, query)).order_by('id', '-rank').distinct('id')
             # sort again using rank
+            #result=result.filter()
             finalQueryset = sorted(result, key=operator.attrgetter('rank'), reverse=False)
-
-            return finalQueryset[:100]
+            return result[:100]
+        elif not keyword:
+            return []
 
 @login_required(login_url='/')
 def upvote(request, id_):
@@ -109,12 +115,13 @@ def upload_paper(request):
             # using ocr to convert multiple images to text
             text = ""
             for image in request.FILES.getlist('image'):
+                extension = os.path.splitext(str(image))[1]
+                if extension in ['doc', 'docx', 'pdf']:
+                    AssessmentFile.objects.create(assessment=assessment_form, document=image)
+                    break
                 photo = AssessmentImage(assessment=assessment_form, image=image)
                 text += convert_img_to_txt(image)
                 photo.save()
-
-            if documentForm.is_valid():
-                pass
             messages.success(request, 'successfully uploaded!')
             return render(request, 'uploadedit.html', {'assessment': assessment_form, 'fulltext': text, 'questions': findQuestions(text)})
     else:
@@ -159,7 +166,7 @@ def viewAnswers(request, id_):
     # get all answers associated with question ordered by the number of votes
     answers = question.questionAnswer.all().order_by('-votes')
     if request.method == 'POST':
-        answerForm = AnswerForm(request.POST)
+        answerForm = AnswerForm(request.POST, request.FILES)
         if answerForm.is_valid():
             # create answer object
             answer_form = answerForm.save(commit=False)
@@ -176,6 +183,10 @@ def viewAnswers(request, id_):
         'answers': answers
     }
     return render(request, 'viewAnswers.html', context)
+
+def viewFavorite(request):
+    assessments = UserFavoriteAssessment.objects.filter(user=request.user)
+    return render(request, 'resultPage.html', {'results': assessments})
 
 
 class AssessmentDetailView(HitCountDetailView):
@@ -209,3 +220,12 @@ def taggedAssessemnt(request, slug):
         'results': assessments,
     }
     return render(request, 'resultPage.html', context)
+
+
+def addToList(request, id_):
+    assessment_ = get_object_or_404(Assessment,id=id_)
+    try:
+        UserFavoriteAssessment.objects.create(user=request.user, assessment=assessment_)
+    except Exception:
+        pass
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

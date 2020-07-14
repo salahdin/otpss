@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from . import ListofPrograms
 from .validators import validate_id
 
+
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
     studentId = models.IntegerField(verbose_name="student id", validators=[validate_id])

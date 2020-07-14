@@ -24,7 +24,7 @@ SECRET_KEY = '=c#0f*^36z5q=w$hsl=amw#-=a*2ssk^_gv2nezzzm-x9&e5z4'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['192.168.137.1', '127.0.0.1']
 
 # Application definition
 
@@ -43,7 +43,10 @@ INSTALLED_APPS = [
     'hitcount',
     'taggit',
     'jet_django',
+    'taggit_autosuggest',
 ]
+
+
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

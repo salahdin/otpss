@@ -12,13 +12,13 @@ class AssessmentTest(TestCase):
     def setUp(self):
         user = User.objects.create_user('testuser', fake.email(), 'password')
 
-    def test_Assessment_invalid(self):
+    def test_AssessmentForm_invalid(self):
         self.client.login(username='testuser', password='password')
         form = AssessmentForm(data={'courseCode': "", 'courseTitle': "data structure", 'assessmentDate': "2020-03-12",
                                     'user': ""})
         self.assertFalse(form.is_valid())
 
-    def test_Assessment_valid(self):
+    def test_AssessmentForm_valid(self):
         self.client.login(username='testuser', password='password')
         form = AssessmentForm(
             data={'courseCode': "CSI247", 'courseTitle': fake.text(), 'assessmentDate': "2020-03-12",
@@ -40,11 +40,11 @@ class AssessmentTest(TestCase):
                                               assessmentDate="2020-05-04",
                                               user=self.user,
                                               )
-        options = {'assessment': "",
+        options = {'assessment': assessment,
                 "content": fake.text(),
                 }
         test_question = Question.objects.create(**options)
-        self.assertTrue(isinstance(test_question,Question))
+        self.assertTrue(isinstance(test_question, Question))
 
     def test_Answer_invalid(self):
         pass

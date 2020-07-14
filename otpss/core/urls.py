@@ -14,4 +14,6 @@ urlpatterns = [
     path('hitcount/', include(('hitcount.urls', 'hitcount'), namespace='hitcount')),
     path('tagged/<slug:slug>', views.taggedAssessemnt, name='tagged'),
     path('manualQuestion/<int:id_>', views.saveQuestions, name='MsaveQ'),
+    path('addtolist/<int:id_>',views.addToList, name='addtollist'),
+    path('mylist/', views.viewFavorite, name='myFav'),
     ]

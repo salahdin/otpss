@@ -35,7 +35,7 @@
                 <div class="card-body">
                     <p class="card-text">{{i.Answercontent}}</p>
                     {% if i.AnswerImage %}
-                        <img src="{{i.AnswerImage.url}}">
+                        <a href="{{i.AnswerImage.url}}">view attached image</a>
                     {% endif %}
                     <p>Total Votes : {{i.votes}}</p>
                     <a href="{% url 'core:upvote' i.id%}" class="btn btn-success">upvote</a>

@@ -31,6 +31,6 @@
     </div>
     {% endfor %}
     {% if not person_profile.user.assessmentPost.all %}
-        no uploads
+        <p class="text-danger">no uploads</p>
     {%endif%}
 {% endblock %}

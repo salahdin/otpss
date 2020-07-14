@@ -20,7 +20,7 @@ class QuestionAdmin(admin.ModelAdmin):
 class AnswerAdmin(admin.ModelAdmin):
     list_display = ('Answercontent', 'user', 'created', 'votes')
 
-
+admin.site.register(UserFavoriteAssessment)
 admin.site.register(Assessment, AssessmentAdmin)
 admin.site.register(AssessmentImage)
 admin.site.register(Question, QuestionAdmin)

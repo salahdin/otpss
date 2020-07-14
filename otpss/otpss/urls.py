@@ -8,6 +8,7 @@ admin.site.site_title = "Online test paper and solution sharing system"
 urlpatterns = [
                   path('admin/', admin.site.urls),
                   path('', include('accountprofile.urls')),
+                  path('taggit_autocomplete/', include('taggit_autosuggest.urls')),
                   path('core/', include('core.urls')),
                   path('jet_api/', include('jet_django.urls')),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

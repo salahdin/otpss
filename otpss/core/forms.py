@@ -1,9 +1,14 @@
 from django import forms
 from .models import Assessment, AssessmentImage, Answer, AssessmentFile
-
+from django.contrib.admin import widgets
 
 class DateInput(forms.DateInput):
     input_type = 'date'
+
+
+class DateForm(forms.Form):
+    mydatetime = forms.SplitDateTimeField(widget=widgets.AdminSplitDateTime)
+
 
 
 class AssessmentForm(forms.ModelForm):

@@ -141,4 +141,11 @@ class AssessmentFile(models.Model):
                                    related_name="assessmentdoc"
                                    )
 
-    document = models.FileField(verbose_name="assessment in document format", null=True)
+    document = models.FileField(verbose_name="assessment in document format", upload_to="files", null=True)
+
+
+class UserFavoriteAssessment(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="myList")
+    assessment = models.ForeignKey(Assessment, on_delete=models.CASCADE, related_name="myFavorite")
+
+

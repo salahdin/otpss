@@ -31,7 +31,7 @@ def frontpage(request):
     if request.method == 'POST':
         if 'signupform' in request.POST:
             signupform = SignUpForm(data=request.POST)
-            profileform = UserProfileForm(data=request.POST)
+            profileform = UserProfileForm(request.POST, request.FILES)
             signinform = SignInForm()
 
             if signupform.is_valid():
@@ -39,9 +39,14 @@ def frontpage(request):
                 password = signupform.cleaned_data['password1']
                 signupform.save()
                 user = authenticate(username=username, password=password)
-                profile = profileform.save(commit=False)
-                profile.user = user
-                profile.save()
+                # create user profile object
+                try:
+                    UserProfile.objects.create(user=user, studentId=request.POST['studentId'],
+                                               program=request.POST['program'],
+                                               avatar=request.POST['avatar']
+                                               )
+                except Exception:
+                    pass
                 # log the user in
                 login(request, user)
                 return redirect('core:home_page')
