@@ -3,7 +3,7 @@ function autocomplete(inp) {
   the text field element/
   var currentFocus;
   /*execute a function when someone writes in the text field:*/
-    var arr = ['computer','data','school']
+    var arr = ['computer','data','school','csi','data','datastructures','test','exam']
       inp.addEventListener("input", function(e) {
       var a, b, i, val = this.value;
       /*close any already open lists of autocompleted values*/
