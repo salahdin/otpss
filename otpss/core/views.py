@@ -7,9 +7,11 @@ from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
 from django.shortcuts import get_object_or_404, redirect
 from django.shortcuts import render, HttpResponseRedirect
 
-
 from taggit.models import Tag
 from django.views.generic import ListView, DetailView
+
+from django.views.generic import ListView
+
 from hitcount.views import HitCountDetailView
 from taggit.models import Tag
 
@@ -38,6 +40,7 @@ class AssessmentSearchView(ListView):
 
     def get_queryset(self):
         keyword = self.request.GET.get('keyword')
+
         date = self.request.GET.get('assessmentDate')
         keyword = keyword.replace(',', " ").rstrip()
         print(keyword)
@@ -70,7 +73,7 @@ def upvote(request, id_):
         UserVote.objects.get_or_create(user=request.user, answer=answer_, vote_type='U')
         answer_.votes += 1
         answer_.save()
-    except:
+    except Exception:
         pass
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
@@ -79,19 +82,25 @@ def downvote(request, id_):
     """
     after clicking the down button answer.votes is decremented (will be used for sorting results) and a new vote
     object is created :type id_: int
+    :return request.META.get('HTTP_REFERER')
     """
     answer_ = get_object_or_404(Answer, pk=id_)
     try:
         UserVote.objects.create(user=request.user, answer=answer_, vote_type='D')
         answer_.votes -= 1
         answer_.save()
-    except:
+    except Exception:
         pass
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
 @login_required(login_url='/')
 def upload_paper(request):
+    """
+    assessment upload form
+    :param request: object to pass state through the system
+    :return:
+    """
     common_tags = Assessment.tags.most_common()[:4]
     # if user is not logged in redirect to landing page
     if request.user == None:
@@ -140,6 +149,12 @@ def upload_paper(request):
 
 
 def saveQuestions(request, id_):
+    """
+    user answer form handling
+    :param request: object to pass state through the system
+    :param id_: question id
+    :return:
+    """
     assessment_ = get_object_or_404(Assessment, id=id_)
     if request.method == 'GET':
         content = request.GET['full-content']

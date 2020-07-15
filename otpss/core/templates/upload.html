@@ -1,8 +1,12 @@
 {% extends 'templates/base.html' %}
 {% load crispy_forms_tags %}
+{% load static %}
 
 {% block main %}
 
+    <style>
+
+    </style>
 <div class="col-8">
     <p>please complete the form before uploading</p>
     <form method="POST" class="post-form" enctype="multipart/form-data">
@@ -17,6 +21,8 @@
 
 </div>
 
+<script src="{% static 'js/autocomplete.js' %}"></script>
+    <script>autocomplete(document.getElementById("id_tags"));</script>
 <script>
     function rotate(image) {
         let rotateAngle = Number(image.getAttribute("rotangle")) + 90;

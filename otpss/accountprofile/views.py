@@ -19,12 +19,22 @@ def login_view(request):
 
 
 def logout_view(request):
+    """
+    delete session and redirect to landing page
+    :param request:
+    :return:
+    """
     logout(request)
     return redirect('/')
 
 
 def frontpage(request):
     # redirect user to main page if authenticated
+    """
+
+    :param request:
+    :return: signin and register form
+    """
     if request.user.is_authenticated:
         return redirect('core:home_page')
     profileform = UserProfileForm()
@@ -70,6 +80,12 @@ def frontpage(request):
 
 
 def profileDetailView(request, id_):
+    """
+    detail view of a user
+    :param request:
+    :param id_: user id
+    :return: profile and user instance
+    """
     if request.user.is_authenticated:
         person = get_object_or_404(User, id=id_)
         person_profile = person.profile
