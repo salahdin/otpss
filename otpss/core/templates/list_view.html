@@ -1,20 +1,40 @@
-{% extends 'bootstrap_base.html' %}
+{% extends 'base.html' %}
+{% load hitcount_tags %}
 
-{%block body %}
-<center>
-    {%for i in assessments %}
-</center>
-<div style="text-align: center;">
-    <h1>{{i.courseCode}}</h1>
-    <h3>{{i.courseTitle}}</h3>
-    {% for simage in i.assessmentPic.all %}
-    {% if simage.image%}
-         <a href="#" class="image"><img src="{{ simage.image.url }}"></a>
-    {% endif %}
-    <a href="{%url 'core:view_answers' i.id %}">answers</a>
+{%block main %}
+
+
+<div class="container">
+<h4>my list</h4>
+{% if not empty %}
+{%for i in assessments %}
+    <div class="card">
+      <h5 class="card-header topthing text-white">{{i.courseCode}}</h5>
+      <div class="card-body">
+        <h5 class="card-title">{{i.courseTitle}}</h5>
+        <p class="card-text">assessment date : {{i.assessmentDate}}</p>
+          <img src="https://d2pj2twnjx3fya.cloudfront.net/frontend-packages/viewer-container/eye_icon.svg">
+          <span class="glyphicon glyphicon-eye-open"></span>  <p> Views : {% get_hit_count for i %}</p>
+          <a href="{% url 'core:assessment_detail_view' i.id %}" class="btn btn-primary">view paper</a>
+          <a href="{% url 'accounts:profileDetailView' i.user.id %}" class="btn btn-primary">{{i.user}}</a>
+          <br>
+          <br>
+        <div  style="display:flex">
+            <br>
+            {% for tag in i.tags.all %}
+                <a href="{% url 'core:tagged' tag.slug %}" class="mr-1 badge badge-info">#{{ tag }}</a>
+            {% endfor %}
+        </div>
+      </div>
+    </div>
+    <br>
     {%endfor%}
-    {%endfor%}
-</div>
+{% elif results|length == 0 %}
+<h1>empty</h1>
+    <div class="alert alert-danger" role="alert">
+        <p>no results found</p>
+    </div>
+{% endif %}
 
 
 
@@ -39,5 +59,5 @@
     {% endif %}
   </ul>
 {% endif %}
-
+</div>
 {%endblock%}

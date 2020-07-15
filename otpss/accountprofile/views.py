@@ -53,7 +53,7 @@ def frontpage(request):
                 try:
                     UserProfile.objects.create(user=user, studentId=request.POST['studentId'],
                                                program=request.POST['program'],
-                                               avatar=request.POST['avatar']
+                                               avatar=request.FILES['avatar']
                                                )
                 except Exception:
                     pass

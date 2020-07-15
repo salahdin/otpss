@@ -42,6 +42,9 @@
               <a class="nav-link" href="{%url 'core:upload'%}">Upload</a>
             </li>
             <li class="nav-item">
+              <a class="nav-link" href="{%url 'core:myFav'%}">My List</a>
+            </li>
+            <li class="nav-item">
               <a class="nav-link" href="{% url 'accounts:profileDetailView' request.user.id %}">My Account</a>
             </li>
             <li class="nav-item">
@@ -67,9 +70,13 @@
 
     </nav>
 
-    <!-- End Navbar -->
-
-    <!-- Main -->
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
     <main role="main" class="container">
       {% block main %}
       {% endblock %}

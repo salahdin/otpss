@@ -48,6 +48,7 @@
       <h5 class="card-header">{{assessment.courseCode}}</h5>
       <div class="card-body">
         <h5 class="card-title">{{assessment.courseTitle}}</h5>
+        <a href="{% url 'core:addtollist' assessment.id %}">add to my list</a>
           <div style="display:flex">
             {% for tag in assessment.tags.all %}
                 <a href="{% url 'core:tagged' tag.slug %}" class="mr-1 badge badge-info">#{{ tag }}</a>
@@ -74,7 +75,6 @@
         {%endfor%}
     </div>
 </div>
-
 
 
 <div class="col-4 similar">

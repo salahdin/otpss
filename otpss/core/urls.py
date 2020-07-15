@@ -15,5 +15,5 @@ urlpatterns = [
     path('tagged/<slug:slug>', views.taggedAssessemnt, name='tagged'),
     path('manualQuestion/<int:id_>', views.saveQuestions, name='MsaveQ'),
     path('addtolist/<int:id_>',views.addToList, name='addtollist'),
-    path('mylist/', views.viewFavorite, name='myFav'),
+    path('mylist/', views.viewMyList, name='myFav'),
     ]

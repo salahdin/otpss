@@ -7,9 +7,6 @@ from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
 from django.shortcuts import get_object_or_404, redirect
 from django.shortcuts import render, HttpResponseRedirect
 
-from taggit.models import Tag
-from django.views.generic import ListView, DetailView
-
 from django.views.generic import ListView
 
 from hitcount.views import HitCountDetailView
@@ -200,10 +197,6 @@ def viewAnswers(request, id_):
     }
     return render(request, 'viewAnswers.html', context)
 
-def viewFavorite(request):
-    assessments = UserFavoriteAssessment.objects.filter(user=request.user)
-    return render(request, 'resultPage.html', {'results': assessments})
-
 
 class AssessmentDetailView(HitCountDetailView):
     model = Assessment
@@ -242,6 +235,17 @@ def addToList(request, id_):
     assessment_ = get_object_or_404(Assessment,id=id_)
     try:
         UserFavoriteAssessment.objects.create(user=request.user, assessment=assessment_)
+        messages.success(request,"added to list")
     except Exception:
         pass
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+def viewMyList(request):
+    assessments = []
+    try:
+        UserFavoriteAssessment = request.user.myList.all()
+        for i in UserFavoriteAssessment:
+            assessments.append(i.assessment)
+    except Exception:
+        render(request, 'list_view.html', {'assessments': []})
+    return render(request, 'list_view.html', {'assessments': assessments})
